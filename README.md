@@ -30,6 +30,9 @@ sudo apt install python3-pyqt6
 Datei "dart-cup.py" downloaden und im Ordner ein Terminal öffnen und ausführen:
 python3 dart-cup.py
 
+### 4. Desktopverknüpfung:
+Kopiere dir die dart-cup.desktop aud dein Desktop, passe den Pfad zu deiner dart-cup.py an und mache die Desktop-Datei ausführbar.
+
 
 ## Impressionen
 ![Hauptmenü](screenshots/setup.png)
