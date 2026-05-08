@@ -19,7 +19,7 @@ Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian (KDE Pla
 ## Installation & Start
 Unter **Debian**:
 
-### 2. Python installieren (falls nötig):
+### 1. Python installieren (falls nötig):
 sudo apt update && sudo apt install -y python3
 
 ### 2. Abhängigkeiten installieren:
@@ -27,8 +27,8 @@ sudo apt update
 sudo apt install python3-pyqt6
 
 ### 3. starten:
-Datei "dart_counter.py" downloaden und im Ordner ein Terminal öffnen und ausführen:
-python3 dart_counter.py
+Datei "dart-cup.py" downloaden und im Ordner ein Terminal öffnen und ausführen:
+python3 dart-cup.py
 
 
 ## Impressionen
