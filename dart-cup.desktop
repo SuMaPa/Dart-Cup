@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Debian Dart Cup
+Name=Dart Cup
 Comment=Dart Scoreboard Tracker
 Exec=python3 /absoluter/pfad/zu/deiner/datei/dart-cup.py
 Icon=games-board
