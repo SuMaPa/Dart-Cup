@@ -1,6 +1,6 @@
 # Dart-Cup 🎯
 
-Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian (KDE Plasma) konzipiert, läuft es dank Python und PyQt6 auf nahezu jedem modernen Betriebssystem.
+Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian (KDE Plasma) konzipiert, läuft es dank Python und PyQt6 auf nahezu jedem modernen Betriebssystem (und Windows :D).
 
 ## Features
 *   **Vielseitige Spielmodi:** 301, 501, 701, Around the Clock und der berüchtigte **Elimination-Modus**.
