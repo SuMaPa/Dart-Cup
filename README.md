@@ -29,3 +29,8 @@ sudo apt install python3-pyqt6
 ### 3. starten:
 Datei "dart_counter.py" downloaden und im Ordner ein Terminal öffnen und ausführen:
 python3 dart_counter.py
+
+
+## Impressionen
+![Hauptmenü](screenshots/setup.png)
+![Spielverlauf](screenshots/gameplay.png)
