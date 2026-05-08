@@ -15,13 +15,17 @@ Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian (KDE Pla
 *   **Python 3.8 oder höher:** Das Herzstück des Programms.
 *   **PyQt6:** Das Framework für die grafische Benutzeroberfläche.
 
-## Installation & Start
 
-### 1. Abhängigkeiten installieren
-Unter **Debian/Ubuntu**:
-```bash
+## Installation & Start
+Unter **Debian**:
+
+### 2. Python installieren (falls nötig):
+sudo apt update && sudo apt install -y python3
+
+### 2. Abhängigkeiten installieren:
 sudo apt update
 sudo apt install python3-pyqt6
 
-starten:
-Datei downloaden und im Ordner dart_counter.py ausführen
+### 3. starten:
+Datei "dart_counter.py" downloaden und im Ordner ein Terminal öffnen und ausführen:
+python3 dart_counter.py
