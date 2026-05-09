@@ -34,6 +34,5 @@ python3 dart-cup.py
 Kopiere dir die dart-cup.desktop aud dein Desktop, passe den Pfad zu deiner dart-cup.py an und mache die Desktop-Datei ausführbar.
 
 
-## Impressionen
-![Hauptmenü](screenshots/setup.png)
-![Spielverlauf](screenshots/gameplay.png)
+![Hauptmenü](screenshots/setup_neu.png)
+![Spielverlauf](screenshots/gameplay_neu.png)
