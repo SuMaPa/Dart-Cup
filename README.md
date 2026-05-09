@@ -33,6 +33,13 @@ python3 dart-cup.py
 ### 4. Desktopverknüpfung:
 Kopiere dir die dart-cup.desktop aud dein Desktop, passe den Pfad zu deiner dart-cup.py an und mache die Desktop-Datei ausführbar.
 
+### Windows11:
+installiere den Python Install Manager, Fragen mit Y benatnworten
+Danach cmd öffnen
+Befehle:
+python -m pip install --upgrade pip 
+pip install PyQt6 
+Datei "dart-cup.py" downloaden und ausführen
 
 ![Hauptmenü](screenshots/setup_neu.png)
 ![Spielverlauf](screenshots/gameplay_neu.png)
