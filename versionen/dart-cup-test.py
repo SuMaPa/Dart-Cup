@@ -244,28 +244,32 @@ class ProDartLeague(QWidget):
     def switch_to_game_window(self):
         self.stack.setCurrentIndex(1)
         
-        # 1. Verfügbaren Platz ermitteln
+        # 1. Verfügbaren Platz auf Kubuntu/Plasma ermitteln (abzüglich Panels)
         screen_geo = self.screen().availableGeometry()
         screen_w = screen_geo.width()
         screen_h = screen_geo.height()
 
-        # 2. Größe festlegen (max. 1280x768 oder kleiner falls Monitor zu klein)
-        width = min(1280, screen_w)
-        height = min(768, screen_h)
-        self.resize(width, height)
+        # 2. Fenstergröße festlegen (deine Wunschgröße oder kleiner, falls der Screen limitiert)
+        target_w = min(1280, screen_w)
+        target_h = min(768, screen_h)
+        self.resize(target_w, target_h)
         
-        # 3. WICHTIG: Erst Events verarbeiten, damit resize registriert wird
+        # 3. Events verarbeiten, damit KWin die neue Größe kennt
         QApplication.processEvents()
 
-        # 4. Absolute Mitte berechnen
-        # screen_geo.left/top stellt sicher, dass es auch bei Taskleisten oben/links stimmt
-        center_x = screen_geo.left() + (screen_w - width) // 2
-        center_y = screen_geo.top() + (screen_h - height) // 2
+        # 4. Gleichmäßigen Abstand zu den Rändern berechnen
+        # Wir nehmen den Startpunkt des verfügbaren Bereichs (screen_geo.x/y)
+        # und addieren die Hälfte des überschüssigen Platzes.
+        gap_x = (screen_w - target_w) // 2
+        gap_y = (screen_h - target_h) // 2
         
-        # 5. Fenster hart auf die Mitte setzen
-        self.move(center_x, center_y)
+        new_x = screen_geo.x() + gap_x
+        new_y = screen_geo.y() + gap_y
+        
+        # 5. Final verschieben
+        self.move(new_x, new_y)
 
-        # Fade-In Animation
+        # Fade-Effekt (500ms)
         self.effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.effect)
         self.animation = QPropertyAnimation(self.effect, b"opacity")
