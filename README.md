@@ -35,7 +35,7 @@ Kopiere dir die dart-cup.desktop aud dein Desktop, passe den Pfad zu deiner dart
 
 ### Windows11:
 installiere den Python Install Manager, Fragen mit Y benatnworten  
-Danach cmd öffnen  
+drücke Win + R, tippe cmd ein und drücke Enter 
 Befehle:  
 python -m pip install --upgrade pip  
 pip install PyQt6  
