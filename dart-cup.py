@@ -326,7 +326,8 @@ class ProDartLeague(QWidget):
         self.turn_timer.start(1500)
 
     def next_player(self):
-        if len(self.finished_players) >= len(self.players) - 1 or len(self.players) == len(self.finished_players):
+        if (len(self.players) > 1 and len(self.finished_players) >= len(self.players) - 1) or \
+           (len(self.players) == 1 and len(self.finished_players) == 1):
             self.score_label.setText("GAME OVER")
             self.info_label.setText("Alle fertig!")
             self.back_btn.setText("Beenden")
