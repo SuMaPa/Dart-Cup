@@ -244,30 +244,23 @@ class ProDartLeague(QWidget):
     def switch_to_game_window(self):
         self.stack.setCurrentIndex(1)
         
-        # 1. Verfügbaren Platz ermitteln
+        # 1. Geometrie berechnen
         screen_geo = self.screen().availableGeometry()
-        screen_w = screen_geo.width()
-        screen_h = screen_geo.height()
-
-        # 2. Zielgröße (bei 1280x800 Monitor sind 768px Höhe sehr knapp)
-        target_w = min(1280, screen_w)
-        target_h = min(768, screen_h)
-
-        # 3. Abstände berechnen
-        gap_x = (screen_w - target_w) // 2
-        gap_y = (screen_h - target_h) // 2
+        target_w = min(1280, screen_geo.width())
+        target_h = min(768, screen_geo.height())
         
-        new_x = screen_geo.x() + gap_x
-        new_y = screen_geo.y() + gap_y
+        new_x = screen_geo.x() + (screen_geo.width() - target_w) // 2
+        new_y = screen_geo.y() + (screen_geo.height() - target_h) // 2
 
-        # 4. Der Trick für KDE: setGeometry statt resize/move getrennt
-        # Das überschreibt die "gemerkte" Position des Window-Managers effektiver
+        # 2. KDE/KWin "resetten"
+        # Wir setzen die Geometrie und rufen danach showNormal() auf, 
+        # um sicherzustellen, dass keine alten Constraints greifen.
         self.setGeometry(new_x, new_y, target_w, target_h)
         
-        # 5. Events forcieren
+        # 3. Den Grafik-Stack forcieren
         QApplication.processEvents()
 
-        # Fade-In Effekt
+        # Fade-In Animation
         self.effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.effect)
         self.animation = QPropertyAnimation(self.effect, b"opacity")
