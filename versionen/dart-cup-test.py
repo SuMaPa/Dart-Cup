@@ -243,21 +243,29 @@ class ProDartLeague(QWidget):
 
     def switch_to_game_window(self):
         self.stack.setCurrentIndex(1)
-
-        # Dynamische Größenanpassung
+        
+        # 1. Verfügbaren Platz ermitteln
         screen_geo = self.screen().availableGeometry()
-        width = min(1280, screen_geo.width())
-        height = min(768, screen_geo.height())
+        screen_w = screen_geo.width()
+        screen_h = screen_geo.height()
 
+        # 2. Größe festlegen (max. 1280x768 oder kleiner falls Monitor zu klein)
+        width = min(1280, screen_w)
+        height = min(768, screen_h)
         self.resize(width, height)
-        QApplication.processEvents() # Wichtig für die korrekte Berechnung danach
+        
+        # 3. WICHTIG: Erst Events verarbeiten, damit resize registriert wird
+        QApplication.processEvents()
 
-        # Manuelle Zentrierung
-        new_x = screen_geo.left() + (screen_geo.width() - width) // 2
-        new_y = screen_geo.top() + (screen_geo.height() - height) // 2
-        self.move(new_x, new_y)
+        # 4. Absolute Mitte berechnen
+        # screen_geo.left/top stellt sicher, dass es auch bei Taskleisten oben/links stimmt
+        center_x = screen_geo.left() + (screen_w - width) // 2
+        center_y = screen_geo.top() + (screen_h - height) // 2
+        
+        # 5. Fenster hart auf die Mitte setzen
+        self.move(center_x, center_y)
 
-        # Fade-In
+        # Fade-In Animation
         self.effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.effect)
         self.animation = QPropertyAnimation(self.effect, b"opacity")
