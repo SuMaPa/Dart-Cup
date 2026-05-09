@@ -12,12 +12,13 @@ Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian (KDE Pla
 *   **Konsequentes Ende:** Sobald das Spiel vorbei ist, wechselt der Abbruch-Button zu "Beenden" – für einen sauberen Abschluss.
 
 ## Voraussetzungen
-*   **Python 3.8 oder höher:** Das Herzstück des Programms.
+*   **Python 3.11 oder höher:** Das Herzstück des Programms.
 *   **PyQt6:** Das Framework für die grafische Benutzeroberfläche.
 
 
-## Installation & Start
-Unter **Debian**:
+## Installation & Start  
+
+### Debian:
 
 ### 1. Python installieren (falls nötig):
 sudo apt update && sudo apt install -y python3
