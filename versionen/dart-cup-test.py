@@ -244,32 +244,30 @@ class ProDartLeague(QWidget):
     def switch_to_game_window(self):
         self.stack.setCurrentIndex(1)
         
-        # 1. Verfügbaren Platz auf Kubuntu/Plasma ermitteln (abzüglich Panels)
+        # 1. Verfügbaren Platz ermitteln
         screen_geo = self.screen().availableGeometry()
         screen_w = screen_geo.width()
         screen_h = screen_geo.height()
 
-        # 2. Fenstergröße festlegen (deine Wunschgröße oder kleiner, falls der Screen limitiert)
+        # 2. Zielgröße (bei 1280x800 Monitor sind 768px Höhe sehr knapp)
         target_w = min(1280, screen_w)
         target_h = min(768, screen_h)
-        self.resize(target_w, target_h)
-        
-        # 3. Events verarbeiten, damit KWin die neue Größe kennt
-        QApplication.processEvents()
 
-        # 4. Gleichmäßigen Abstand zu den Rändern berechnen
-        # Wir nehmen den Startpunkt des verfügbaren Bereichs (screen_geo.x/y)
-        # und addieren die Hälfte des überschüssigen Platzes.
+        # 3. Abstände berechnen
         gap_x = (screen_w - target_w) // 2
         gap_y = (screen_h - target_h) // 2
         
         new_x = screen_geo.x() + gap_x
         new_y = screen_geo.y() + gap_y
-        
-        # 5. Final verschieben
-        self.move(new_x, new_y)
 
-        # Fade-Effekt (500ms)
+        # 4. Der Trick für KDE: setGeometry statt resize/move getrennt
+        # Das überschreibt die "gemerkte" Position des Window-Managers effektiver
+        self.setGeometry(new_x, new_y, target_w, target_h)
+        
+        # 5. Events forcieren
+        QApplication.processEvents()
+
+        # Fade-In Effekt
         self.effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.effect)
         self.animation = QPropertyAnimation(self.effect, b"opacity")
