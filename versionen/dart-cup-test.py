@@ -284,7 +284,7 @@ class ProDartLeague(QWidget):
         self.turn_timer.stop()
         QTimer.singleShot(1, self.switch_to_setup_window)
 
-def switch_to_setup_window(self):
+    def switch_to_setup_window(self):
         # 1. Geometrie berechnen
         screen_geo = self.screen().availableGeometry()
         target_w, target_h = 700, 400
