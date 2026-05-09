@@ -284,20 +284,21 @@ class ProDartLeague(QWidget):
         self.turn_timer.stop()
         QTimer.singleShot(1, self.switch_to_setup_window)
 
-    def switch_to_setup_window(self):
-        self.stack.setCurrentIndex(0)
-
-        # Zurück zur kompakten Größe
-        self.resize(700, 400)
-        QApplication.processEvents()
-
-        # Erneut zentrieren
+def switch_to_setup_window(self):
+        # 1. Geometrie berechnen
         screen_geo = self.screen().availableGeometry()
-        new_x = screen_geo.left() + (screen_geo.width() - 700) // 2
-        new_y = screen_geo.top() + (screen_geo.height() - 400) // 2
-        self.move(new_x, new_y)
+        target_w, target_h = 700, 400
+        new_x = screen_geo.x() + (screen_geo.width() - target_w) // 2
+        new_y = screen_geo.y() + (screen_geo.height() - target_h) // 2
 
-        # Fade-In für das Setup
+        # 2. KDE-Reset
+        self.hide()
+        self.stack.setCurrentIndex(0)
+        self.setGeometry(new_x, new_y, target_w, target_h)
+        self.show()
+
+        # 3. Fade-In für das Setup
+        QApplication.processEvents()
         self.setup_effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.setup_effect)
         self.setup_animation = QPropertyAnimation(self.setup_effect, b"opacity")
