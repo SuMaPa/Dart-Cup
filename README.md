@@ -23,7 +23,7 @@ Unter **Debian**:
 sudo apt update && sudo apt install -y python3
 
 ### 2. Abhängigkeiten installieren:
-sudo apt update
+sudo apt update  
 sudo apt install python3-pyqt6
 
 ### 3. starten:
