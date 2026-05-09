@@ -2,15 +2,19 @@ import sys
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
                              QLabel, QPushButton, QGridLayout, QTableWidget,
                              QTableWidgetItem, QHeaderView, QLineEdit, QCheckBox,
-                             QStackedWidget, QFrame, QComboBox)
-from PyQt6.QtCore import Qt, QTimer
+                             QStackedWidget, QFrame, QComboBox, QGraphicsOpacityEffect)
+from PyQt6.QtCore import Qt, QTimer, QPropertyAnimation
 from PyQt6.QtGui import QColor
 
 class ProDartLeague(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Dart Cup")
-        self.resize(1050, 600)
+        self.resize(700, 400)
+        center_point = self.screen().availableGeometry().center()
+        frame_geometry = self.frameGeometry()
+        frame_geometry.moveCenter(center_point)
+        self.move(frame_geometry.topLeft())
 
         self.setStyleSheet("""
             QWidget { background-color: #1b1e20; color: #eff0f1; font-family: 'Segoe UI', sans-serif; }
@@ -38,7 +42,7 @@ class ProDartLeague(QWidget):
         self.current_player_idx = 0
         self.darts_thrown = 0
         self.modifier = 1
-        self.game_mode = "501"
+        self.game_mode = "301"
 
         self.turn_timer = QTimer()
         self.turn_timer.setSingleShot(True)
@@ -64,27 +68,19 @@ class ProDartLeague(QWidget):
         mode_layout.addWidget(QLabel("Modus:"))
         self.mode_box = QComboBox()
         self.mode_box.addItems(["301", "501", "701", "Around the Clock", "Elimination"])
-        self.mode_box.setCurrentText("501")
+        self.mode_box.setCurrentText("301")
         mode_layout.addWidget(self.mode_box)
 
-        # Hilfe-Fragezeichen mit Tooltip
         help_icon = QLabel("?")
         help_icon.setFixedSize(20, 20)
         help_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        help_icon.setStyleSheet("""
-            background-color: #3daee9; color: black;
-            border-radius: 10px; font-weight: bold;
-        """)
-        help_text = (
-            "<b>MODI ERKLÄRUNG:</b><br><br>"
+        help_icon.setStyleSheet("background-color: #3daee9; color: black; border-radius: 10px; font-weight: bold;")
+        help_icon.setToolTip(            "<b>MODI ERKLÄRUNG:</b><br><br>"
             "<b>301/501/701:</b> Klassisch auf 0 runterspielen.<br>"
             "<b>Around the Clock:</b> Triff die Zahlen 1 bis 20 nacheinander, zum Schluss Bull.<br>"
             "<b>Elimination:</b> Starte bei 301. Erreichst du den Score eines Gegners, "
-            "wird dieser auf 301 zurückgesetzt! Ziel: Genau 0."
-        )
-        help_icon.setToolTip(help_text)
+            "wird dieser auf 301 zurückgesetzt!")
         mode_layout.addWidget(help_icon)
-
         layout.addLayout(mode_layout)
 
         rule_frame = QFrame()
@@ -95,21 +91,37 @@ class ProDartLeague(QWidget):
         rule_layout.addWidget(self.cb_double_out)
         layout.addWidget(rule_frame)
 
-        layout.addWidget(QLabel("Spielernamen (max. 8):"))
-        self.player_input = QLineEdit()
-        self.player_input.setPlaceholderText("Spieler1, Spieler2, Spieler3, Spieler4, ...")
-        layout.addWidget(self.player_input)
+        layout.addWidget(QLabel("Spielernamen:"))
+        grid_names = QGridLayout()
+        grid_names.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.player_inputs = []
 
-        start_btn = QPushButton("GAME START")
-        start_btn.setStyleSheet("background-color: #27ae60; font-weight: bold; height: 45px;")
-        start_btn.clicked.connect(self.start_game)
-        layout.addWidget(start_btn)
+        for i in range(8):
+            line_edit = QLineEdit()
+            line_edit.setPlaceholderText(f"Spieler {i+1}")
+            line_edit.setMaxLength(32)
+            line_edit.setFixedWidth(300)
+            grid_names.addWidget(line_edit, i // 2, i % 2)
+            self.player_inputs.append(line_edit)
+
+        layout.addLayout(grid_names)
         layout.addStretch()
+
+        bottom_layout = QHBoxLayout()
+        start_btn = QPushButton("GAME START")
+        start_btn.setStyleSheet("background-color: #27ae60; font-weight: bold; height: 35px;")
+        start_btn.setFixedWidth(140)
+        start_btn.clicked.connect(self.start_game)
 
         exit_btn = QPushButton("Programm beenden")
         exit_btn.setFixedWidth(140)
+        exit_btn.setFixedHeight(35)
         exit_btn.clicked.connect(sys.exit)
-        layout.addWidget(exit_btn, alignment=Qt.AlignmentFlag.AlignRight)
+
+        bottom_layout.addWidget(start_btn)
+        bottom_layout.addStretch()
+        bottom_layout.addWidget(exit_btn)
+        layout.addLayout(bottom_layout)
 
         widget.setLayout(layout)
         return widget
@@ -121,7 +133,7 @@ class ProDartLeague(QWidget):
 
         self.info_label = QLabel("")
         self.info_label.setStyleSheet("font-size: 22px; color: #fdbc4b;")
-        self.score_label = QLabel("501")
+        self.score_label = QLabel("301")
         self.score_label.setStyleSheet("font-size: 90px; font-weight: bold; color: #3daee9;")
         self.dart_label = QLabel("Darts: ○ ○ ○")
 
@@ -191,7 +203,7 @@ class ProDartLeague(QWidget):
         return widget
 
     def start_game(self):
-        names = [n.strip() for n in self.player_input.text().split(",") if n.strip()]
+        names = [inp.text().strip() for inp in self.player_inputs if inp.text().strip()]
         if not names: names = ["Spieler 1"]
         self.players = names[:8]
 
@@ -212,6 +224,9 @@ class ProDartLeague(QWidget):
         self.current_player_idx = 0
         self.darts_thrown = 0
         self.history = []
+        self.modifier = 1
+        self.btn_double.setChecked(False)
+        self.btn_triple.setChecked(False)
         self.score_at_start_of_turn = self.scores[0]
 
         self.back_btn.setText("Abbrechen")
@@ -220,11 +235,53 @@ class ProDartLeague(QWidget):
         self.table.setRowCount(len(self.players))
         self.set_buttons_enabled(True)
         self.update_display()
+
+        self.table.setRowCount(len(self.players))
+        self.set_buttons_enabled(True)
+        self.update_display()
+        QTimer.singleShot(1, self.switch_to_game_window)
+
+    def switch_to_game_window(self):
+
         self.stack.setCurrentIndex(1)
+        self.resize(1280, 768)
+
+
+        center_point = self.screen().availableGeometry().center()
+        frame_geometry = self.frameGeometry()
+        frame_geometry.moveCenter(center_point)
+        self.move(frame_geometry.topLeft())
+
+        self.fade_anim = QPropertyAnimation(self.stack.currentWidget(), b"windowOpacity")
+
+        self.effect = QGraphicsOpacityEffect()
+        self.stack.currentWidget().setGraphicsEffect(self.effect)
+
+        self.animation = QPropertyAnimation(self.effect, b"opacity")
+        self.animation.setDuration(500)
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
 
     def cancel_game(self):
         self.turn_timer.stop()
+        QTimer.singleShot(1, self.switch_to_setup_window)
+
+    def switch_to_setup_window(self):
         self.stack.setCurrentIndex(0)
+        self.resize(700, 400)
+
+        center_point = self.screen().availableGeometry().center()
+        frame_geometry = self.frameGeometry()
+        frame_geometry.moveCenter(center_point)
+        self.move(frame_geometry.topLeft())
+        self.setup_effect = QGraphicsOpacityEffect()
+        self.stack.currentWidget().setGraphicsEffect(self.setup_effect)
+        self.setup_animation = QPropertyAnimation(self.setup_effect, b"opacity")
+        self.setup_animation.setDuration(500)
+        self.setup_animation.setStartValue(0)
+        self.setup_animation.setEndValue(1)
+        self.setup_animation.start()
 
     def set_buttons_enabled(self, enabled):
         for btn in self.num_buttons:
@@ -328,6 +385,7 @@ class ProDartLeague(QWidget):
     def next_player(self):
         if (len(self.players) > 1 and len(self.finished_players) >= len(self.players) - 1) or \
            (len(self.players) == 1 and len(self.finished_players) == 1):
+
             self.score_label.setText("GAME OVER")
             self.info_label.setText("Alle fertig!")
             self.back_btn.setText("Beenden")
