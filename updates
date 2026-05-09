@@ -1,7 +1,10 @@
 ich spare mir die auflistung der updates und bugs bis zur version "dart-cup-orginal.py" :)
+versionen nach veröffentlichung-absteigend:
+dart-cup-orginal.py
+dart-cup.py.08.05.2026_14:20
 
-
-bugfixes: seit der version "dart-cup-orginal.py" keine bugs gefunden
+bugfixes: 
+behoben: fenster öffnet sich nicht immer zentriert
 
 updates:
 layout im setup fenster angepasst
@@ -9,6 +12,3 @@ automatische größenänderungen der beiden fenster
 fenster nun mittig im bildschirm
 kleiner übergangseffekt
 
-
-notizen für mich:
-ein win11 installieren, python downloaden, installieren, haken bei "add python to path", desktopverknüpfung erstellen
