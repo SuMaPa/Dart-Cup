@@ -242,17 +242,27 @@ class ProDartLeague(QWidget):
         QTimer.singleShot(1, self.switch_to_game_window)
 
     def switch_to_game_window(self):
+        # 1. Geometrie vorberechnen
         screen_geo = self.screen().availableGeometry()
         target_w = min(1280, screen_geo.width())
         target_h = min(768, screen_geo.height())
 
         new_x = screen_geo.x() + (screen_geo.width() - target_w) // 2
         new_y = screen_geo.y() + (screen_geo.height() - target_h) // 2
+
+        # 2. Der "KDE-Killer": Kurz hide/show, um die KWin-Position zu resetten
         self.hide()
+
+        # UI umschalten und Größe/Position setzen, während es unsichtbar ist
         self.stack.setCurrentIndex(1)
         self.setGeometry(new_x, new_y, target_w, target_h)
+
         self.show()
+
+        # 3. Den Grafik-Stack und Events forcieren
         QApplication.processEvents()
+
+        # 4. Fade-In Effekt (startet jetzt sauber an der neuen Position)
         self.effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.effect)
         self.animation = QPropertyAnimation(self.effect, b"opacity")
@@ -260,6 +270,8 @@ class ProDartLeague(QWidget):
         self.animation.setStartValue(0)
         self.animation.setEndValue(1)
         self.animation.start()
+
+        # Fade-In Animation
         self.effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.effect)
         self.animation = QPropertyAnimation(self.effect, b"opacity")
@@ -273,15 +285,19 @@ class ProDartLeague(QWidget):
         QTimer.singleShot(1, self.switch_to_setup_window)
 
     def switch_to_setup_window(self):
+        # 1. Geometrie berechnen
         screen_geo = self.screen().availableGeometry()
         target_w, target_h = 700, 400
         new_x = screen_geo.x() + (screen_geo.width() - target_w) // 2
         new_y = screen_geo.y() + (screen_geo.height() - target_h) // 2
 
+        # 2. KDE-Reset
         self.hide()
         self.stack.setCurrentIndex(0)
         self.setGeometry(new_x, new_y, target_w, target_h)
         self.show()
+
+        # 3. Fade-In für das Setup
         QApplication.processEvents()
         self.setup_effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.setup_effect)
@@ -435,6 +451,7 @@ class ProDartLeague(QWidget):
             display_score = str(target_val)
 
         self.info_label.setText(f"Spieler: {self.players[p]} {'(IN!)' if not self.has_entered[p] else ''}")
+        self.score_label.setStyleSheet("font-size: 90px; font-weight: bold; color: #3daee9;")
         self.score_label.setText(display_score)
         self.dart_label.setText("Darts: " + "● " * self.darts_thrown + "○ " * (3 - self.darts_thrown))
 
@@ -469,6 +486,67 @@ class ProDartLeague(QWidget):
             self.table.setItem(i, 0, ni)
             self.table.setItem(i, 1, li)
             self.table.setItem(i, 2, si)
+
+    def keyPressEvent(self, event):
+        if self.stack.currentIndex() != 1:
+            return
+
+        if not hasattr(self, 'kb_input'):
+            self.kb_input = ""
+
+        key = event.text()
+
+        if key.isdigit():
+            temp_input = self.kb_input + key
+            val = int(temp_input)
+
+            if val <= 25:
+                self.kb_input = temp_input
+                self.update_keyboard_feedback()
+
+        elif event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            if self.kb_input:
+                val = int(self.kb_input)
+                if val == 25 and self.modifier == 3:
+                    self.modifier = 1
+                    self.btn_triple.setChecked(False)
+
+                self.num_clicked(val)
+                self.kb_input = ""
+                self.update_display()
+
+        elif event.key() == Qt.Key.Key_Backspace:
+            if self.kb_input:
+                self.kb_input = self.kb_input[:-1]
+                if not self.kb_input:
+                    self.update_display()
+                else:
+                    self.update_keyboard_feedback()
+            else:
+                self.undo_hit()
+
+        elif key.lower() == 'd': self.btn_double.click()
+        elif key.lower() == 't': self.btn_triple.click()
+
+    def update_keyboard_feedback(self):
+        if not self.kb_input:
+            return
+
+        val = int(self.kb_input)
+        display_text = ""
+
+        if val == 0:
+            display_text = "MISS"
+        elif val == 25:
+            display_text = "BULL"
+        else:
+            display_text = f"Score: {val}"
+
+        # Wir zweckentfremden kurz das Score-Label für das Feedback
+        self.score_label.setText(display_text)
+        self.score_label.setStyleSheet("font-size: 45px; font-weight: bold; color: #fdbc4b;") # Gelb beim Tippen
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
