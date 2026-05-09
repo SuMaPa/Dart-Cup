@@ -242,9 +242,7 @@ class ProDartLeague(QWidget):
         QTimer.singleShot(1, self.switch_to_game_window)
 
     def switch_to_game_window(self):
-        self.stack.setCurrentIndex(1)
-        
-        # 1. Geometrie berechnen
+        # 1. Geometrie vorberechnen
         screen_geo = self.screen().availableGeometry()
         target_w = min(1280, screen_geo.width())
         target_h = min(768, screen_geo.height())
@@ -252,13 +250,26 @@ class ProDartLeague(QWidget):
         new_x = screen_geo.x() + (screen_geo.width() - target_w) // 2
         new_y = screen_geo.y() + (screen_geo.height() - target_h) // 2
 
-        # 2. KDE/KWin "resetten"
-        # Wir setzen die Geometrie und rufen danach showNormal() auf, 
-        # um sicherzustellen, dass keine alten Constraints greifen.
+        # 2. Der "KDE-Killer": Kurz hide/show, um die KWin-Position zu resetten
+        self.hide()
+        
+        # UI umschalten und Größe/Position setzen, während es unsichtbar ist
+        self.stack.setCurrentIndex(1)
         self.setGeometry(new_x, new_y, target_w, target_h)
         
-        # 3. Den Grafik-Stack forcieren
+        self.show()
+
+        # 3. Den Grafik-Stack und Events forcieren
         QApplication.processEvents()
+
+        # 4. Fade-In Effekt (startet jetzt sauber an der neuen Position)
+        self.effect = QGraphicsOpacityEffect()
+        self.stack.currentWidget().setGraphicsEffect(self.effect)
+        self.animation = QPropertyAnimation(self.effect, b"opacity")
+        self.animation.setDuration(500)
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
 
         # Fade-In Animation
         self.effect = QGraphicsOpacityEffect()
