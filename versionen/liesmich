@@ -1,2 +1,3 @@
 die "dart-cup-orginal.py" ist die erste funktionirende version
 die "dart-cup-test.py" ist eine nightly build
+die "dart-cup.py.08.05.2026_14:20" enthält ein fenster bug (fenster öffnet sich nicht überall zentriert)
