@@ -1,9 +1,9 @@
 import sys, random, json, os
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
-                             QLabel, QPushButton, QGridLayout, QTableWidget,
-                             QTableWidgetItem, QHeaderView, QLineEdit, QCheckBox,
-                             QStackedWidget, QFrame, QComboBox)
-from PyQt6.QtCore import Qt, QTimer
+                            QLabel, QPushButton, QGridLayout, QTableWidget,
+                            QTableWidgetItem, QHeaderView, QLineEdit, QCheckBox,
+                            QStackedWidget, QFrame, QComboBox, QGraphicsOpacityEffect)
+from PyQt6.QtCore import Qt, QTimer, QPropertyAnimation
 from PyQt6.QtGui import QColor, QKeyEvent
 
 SETTINGS_FILE = "dart_settings.json"
@@ -244,13 +244,16 @@ class ProDartLeague(QWidget):
     def start_game(self):
         self.save_settings()
         names = [inp.text().strip() for inp in self.player_inputs if inp.text().strip()]
-        if not names: names = ["Spieler 1"]
-        if self.cb_randomize.isChecked(): random.shuffle(names)
+        if not names:
+            names = ["Spieler 1"]
+        if self.cb_randomize.isChecked():
+            random.shuffle(names)
+
         self.players = names[:8]
         self.game_mode = self.mode_box.currentText()
+        self.limit = 301
         if "Elimination" in self.game_mode or "Mensch" in self.game_mode:
             self.scores = [0] * len(self.players)
-            self.limit = 301
         elif self.game_mode == "Around the Clock":
             self.scores = [1] * len(self.players)
         else:
@@ -270,18 +273,48 @@ class ProDartLeague(QWidget):
         self.table.setRowCount(len(self.players))
         self.set_buttons_enabled(True)
         self.update_display()
-        self.switch_to_game_window()
+        QTimer.singleShot(1, self.switch_to_game_window)
 
     def switch_to_game_window(self):
         screen_geo = self.screen().availableGeometry()
         self.stack.setCurrentIndex(1)
         self.setGeometry(screen_geo.x()+(screen_geo.width()-1280)//2, screen_geo.y()+(screen_geo.height()-768)//2, 1280, 768)
+        center_point = self.screen().availableGeometry().center()
+        frame_geometry = self.frameGeometry()
+        frame_geometry.moveCenter(center_point)
+        self.move(frame_geometry.topLeft())
 
+        self.fade_anim = QPropertyAnimation(self.stack.currentWidget(), b"windowOpacity")
+
+        self.effect = QGraphicsOpacityEffect()
+        self.stack.currentWidget().setGraphicsEffect(self.effect)
+
+        self.animation = QPropertyAnimation(self.effect, b"opacity")
+        self.animation.setDuration(500)
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
+        self.setFocus()
     def cancel_game(self):
         self.turn_timer.stop()
+        QTimer.singleShot(1, self.switch_to_setup_window)
+
+
+    def switch_to_setup_window(self):
         screen_geo = self.screen().availableGeometry()
         self.stack.setCurrentIndex(0)
         self.setGeometry(screen_geo.x()+(screen_geo.width()-700)//2, screen_geo.y()+(screen_geo.height()-400)//2, 700, 400)
+        center_point = self.screen().availableGeometry().center()
+        frame_geometry = self.frameGeometry()
+        frame_geometry.moveCenter(center_point)
+        self.move(frame_geometry.topLeft())
+        self.setup_effect = QGraphicsOpacityEffect()
+        self.stack.currentWidget().setGraphicsEffect(self.setup_effect)
+        self.setup_animation = QPropertyAnimation(self.setup_effect, b"opacity")
+        self.setup_animation.setDuration(500)
+        self.setup_animation.setStartValue(0)
+        self.setup_animation.setEndValue(1)
+        self.setup_animation.start()
 
     def set_buttons_enabled(self, enabled):
         for btn in self.num_buttons: btn.setEnabled(enabled)
@@ -313,7 +346,7 @@ class ProDartLeague(QWidget):
     def process_around_the_clock(self, val):
         p = self.current_player_idx
         if val == self.scores[p]:
-            if val == 25: self.scores[p] = 0; self.finished_players.append(p); self.wait_and_next_player(); return
+            if val == 25: self.scores[p] = 0; self.finished_players.append(p); self.darts_thrown += 1; self.wait_and_next_player(); return
             self.scores[p] = val + 1 if val < 20 else 25
         self.finish_dart()
 
@@ -328,6 +361,7 @@ class ProDartLeague(QWidget):
             if new_score > self.limit:
                 self.scores[p] = self.score_at_start_of_turn
                 self.is_bust[p] = True
+                self.darts_thrown += 1
                 self.wait_and_next_player(); return
         else:
             new_score = self.scores[p] - points
@@ -340,6 +374,7 @@ class ProDartLeague(QWidget):
             if (new_score < 0) or (new_score == 1 and self.double_out) or (new_score == 0 and self.double_out and not was_double):
                 self.scores[p] = self.score_at_start_of_turn
                 self.is_bust[p] = True
+                self.darts_thrown += 1
                 self.wait_and_next_player(); return
         self.scores[p] = new_score
         if self.game_mode == "Mensch-ärgere-dich-nicht!": self.check_elimination(p, new_score)
@@ -392,14 +427,30 @@ class ProDartLeague(QWidget):
         self.info_label.setText(f"Spieler: {self.players[p]} {'(Warten auf Double-In)' if not self.has_entered[p] else ''}")
         self.dart_label.setText("Darts: " + "● " * self.darts_thrown + "○ " * (3 - self.darts_thrown))
         for i in range(len(self.players)):
-            ni, li = QTableWidgetItem(self.players[i]), QTableWidgetItem(", ".join(self.last_darts[i]))
-            ni.setForeground(Qt.GlobalColor.yellow if i == p else Qt.GlobalColor.white)
+            for col in range(3):
+                if not self.table.item(i, col):
+                    self.table.setItem(i, col, QTableWidgetItem(""))
+
+            ni = self.table.item(i, 0)
+            li = self.table.item(i, 1)
+            si = self.table.item(i, 2)
+
+            ni.setText(self.players[i])
+            ni.setForeground(QColor(Qt.GlobalColor.yellow) if i == p else QColor(Qt.GlobalColor.white))
+
+            li.setText(", ".join(self.last_darts[i]))
+
             si_text = f"PLATZ {self.finished_players.index(i)+1}" if i in self.finished_players else str(self.scores[i])
-            si = QTableWidgetItem(si_text)
-            if i in self.finished_players: si.setForeground(QColor("#fdbc4b"))
-            if self.is_bust[i] and i not in self.finished_players:
-                si.setForeground(QColor("#ff4c4c")); li.setForeground(QColor("#ff4c4c"))
-            self.table.setItem(i, 0, ni); self.table.setItem(i, 1, li); self.table.setItem(i, 2, si)
+            si.setText(si_text)
+
+            if i in self.finished_players:
+                si.setForeground(QColor("#fdbc4b"))
+            elif self.is_bust[i]:
+                si.setForeground(QColor("#ff4c4c"))
+                li.setForeground(QColor("#ff4c4c"))
+            else:
+                si.setForeground(QColor(Qt.GlobalColor.white))
+                li.setForeground(QColor(Qt.GlobalColor.white))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
