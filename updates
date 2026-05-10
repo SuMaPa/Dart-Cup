@@ -5,6 +5,7 @@ dart-cup.py.08.05.2026_14:20
 
 bugfixes: 
 behoben: fenster öffnet sich nicht immer zentriert
+behoben: trible bull sperre
 
 updates:
 layout im setup fenster angepasst
