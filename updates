@@ -1,7 +1,7 @@
 ich spare mir die auflistung der updates und bugs bis zur version "dart-cup-orginal.py" :)
-versionen nach veröffentlichung-absteigend:
-dart-cup-orginal.py
-dart-cup.py.08.05.2026_14:20
+im version prdner ist die "orginal" die erste version
+die "test" vesion muss nicht aktuell sein oder funktionieren 
+
 
 bugfixes: 
 behoben: fenster öffnet sich nicht immer zentriert
@@ -13,3 +13,5 @@ automatische größenänderungen der beiden fenster
 fenster nun mittig im bildschirm
 kleiner übergangseffekt
 tastatur (nummerblock) funktioniert nun auch im spiel
+spielernamen und einstellungen werden nun gespeichert
+neue spielevariante "mensch-ärger-dich-nicht2 eingeführt
