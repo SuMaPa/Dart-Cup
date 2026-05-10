@@ -204,7 +204,7 @@ class ProDartLeague(QWidget):
         if Qt.Key.Key_0 <= key <= Qt.Key.Key_9:
             temp_input = self.typed_score + chr(key)
             val = int(temp_input)
-            if val <= 20 or val == 25:
+            if val <= 20 or val == 25 or val == 50:
                 self.typed_score = temp_input
                 self.update_keyboard_feedback()
             else:
@@ -214,7 +214,12 @@ class ProDartLeague(QWidget):
         elif key in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
             if self.typed_score:
                 val = int(self.typed_score)
-                self.num_clicked(val)
+                if val == 50:
+                    self.modifier = 2
+                    self.num_clicked(25)
+                else:
+                    self.num_clicked(val)
+
                 self.typed_score = ""
                 self.update_display()
         elif key == Qt.Key.Key_Backspace:
@@ -398,20 +403,31 @@ class ProDartLeague(QWidget):
 
         if has_haha and self.darts_thrown > 0:
             msg = "HAHA!" if "Mensch" in mode else "KILL!"
-            self.score_label.setText(msg); self.score_label.setStyleSheet("font-size: 70px; font-weight: bold; color: #e67e22;")
+            self.score_label.setText(msg)
+            self.score_label.setStyleSheet("font-size: 70px; font-weight: bold; color: #e67e22;")
         else:
-            txt = "Ziel: BULL" if target_val == 25 else f"Ziel: {target_val}" if mode == "Around the Clock" else str(target_val)
-            self.score_label.setText(txt); self.score_label.setStyleSheet("font-size: 90px; font-weight: bold; color: #3daee9;")
-
+            if mode == "Around the Clock":
+                txt = "Ziel: BULL" if target_val == 25 else f"Ziel: {target_val}"
+            else:
+                txt = str(target_val)
+            self.score_label.setText(txt)
+            self.score_label.setStyleSheet("font-size: 90px; font-weight: bold; color: #3daee9;")
         self.info_label.setText(f"Spieler: {self.players[p]} {'(Warten auf Double-In)' if not self.has_entered[p] else ''}")
         self.dart_label.setText("Darts: " + "● " * self.darts_thrown + "○ " * (3 - self.darts_thrown))
+
         for i in range(len(self.players)):
             ni, li = QTableWidgetItem(self.players[i]), QTableWidgetItem(", ".join(self.last_darts[i]))
             ni.setForeground(Qt.GlobalColor.yellow if i == p else Qt.GlobalColor.white)
-            si = QTableWidgetItem(f"PLATZ {self.finished_players.index(i)+1}" if i in self.finished_players else str(self.scores[i]))
-            if i in self.finished_players: si.setForeground(QColor("#fdbc4b"))
-            if self.is_bust[i] and i not in self.finished_players: si.setForeground(QColor("#ff4c4c")); li.setForeground(QColor("#ff4c4c"))
-            self.table.setItem(i, 0, ni); self.table.setItem(i, 1, li); self.table.setItem(i, 2, si)
+            si_text = f"PLATZ {self.finished_players.index(i)+1}" if i in self.finished_players else str(self.scores[i])
+            si = QTableWidgetItem(si_text)
+            if i in self.finished_players:
+                si.setForeground(QColor("#fdbc4b"))
+            if self.is_bust[i] and i not in self.finished_players:
+                si.setForeground(QColor("#ff4c4c"))
+                li.setForeground(QColor("#ff4c4c"))
+            self.table.setItem(i, 0, ni)
+            self.table.setItem(i, 1, li)
+            self.table.setItem(i, 2, si)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
