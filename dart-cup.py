@@ -429,16 +429,25 @@ class ProDartLeague(QWidget):
     def update_display(self):
         p = self.current_player_idx
         mode, target_val = self.game_mode, self.scores[p]
-        has_haha = any(i != p and self.is_bust[i] for i in range(len(self.players))) if "Elimination" in mode or "Mensch" in mode else False
-        if has_haha and self.darts_thrown > 0:
-            msg = "HAHA!" if "Mensch" in mode else "KILL!"
-            self.score_label.setText(msg); self.score_label.setStyleSheet("font-size: 70px; font-weight: bold; color: #e67e22;")
+
+        # Check ob bei Elimination jemand eliminiert wurde
+        is_elimination = "Elimination" == mode
+        has_kill = is_elimination and any(i != p and self.is_bust[i] for i in range(len(self.players)))
+
+        if has_kill and self.darts_thrown > 0:
+            self.score_label.setText("KILL!")
+            self.score_label.setStyleSheet("font-size: 70px; font-weight: bold; color: #e67e22;")
         else:
-            if mode == "Around the Clock": txt = "Ziel: BULL" if target_val == 25 else f"Ziel: {target_val}"
-            else: txt = str(target_val)
-            self.score_label.setText(txt); self.score_label.setStyleSheet("font-size: 90px; font-weight: bold; color: #3daee9;")
+            if mode == "Around the Clock":
+                txt = "Ziel: BULL" if target_val == 25 else f"Ziel: {target_val}"
+            else:
+                txt = str(target_val)
+            self.score_label.setText(txt)
+            self.score_label.setStyleSheet("font-size: 90px; font-weight: bold; color: #3daee9;")
+
         self.info_label.setText(f"Spieler: {self.players[p]} {'(Warten auf Double-In)' if not self.has_entered[p] else ''}")
         self.dart_label.setText("Darts: " + "● " * self.darts_thrown + "○ " * (3 - self.darts_thrown))
+
         for i in range(len(self.players)):
             for col in range(3):
                 if not self.table.item(i, col):
@@ -450,7 +459,6 @@ class ProDartLeague(QWidget):
 
             ni.setText(self.players[i])
             ni.setForeground(QColor(Qt.GlobalColor.yellow) if i == p else QColor(Qt.GlobalColor.white))
-
             li.setText(", ".join(self.last_darts[i]))
 
             si_text = f"PLATZ {self.finished_players.index(i)+1}" if i in self.finished_players else str(self.scores[i])
