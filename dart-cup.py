@@ -277,14 +277,18 @@ class ProDartLeague(QWidget):
 
     def switch_to_game_window(self):
         screen_geo = self.screen().availableGeometry()
-        self.stack.setCurrentIndex(1)
-        self.setGeometry(screen_geo.x()+(screen_geo.width()-1280)//2, screen_geo.y()+(screen_geo.height()-768)//2, 1280, 768)
-        center_point = self.screen().availableGeometry().center()
-        frame_geometry = self.frameGeometry()
-        frame_geometry.moveCenter(center_point)
-        self.move(frame_geometry.topLeft())
+        width = min(1280, screen_geo.width())
+        height = min(768, screen_geo.height())
 
-        self.fade_anim = QPropertyAnimation(self.stack.currentWidget(), b"windowOpacity")
+        new_x = screen_geo.x() + (screen_geo.width() - width) // 2
+        new_y = screen_geo.y() + (screen_geo.height() - height) // 2
+
+        self.hide()
+        self.stack.setCurrentIndex(1)
+        self.setGeometry(new_x, new_y, width, height)
+        self.show()
+
+        QApplication.processEvents()
 
         self.effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.effect)
@@ -294,7 +298,9 @@ class ProDartLeague(QWidget):
         self.animation.setStartValue(0)
         self.animation.setEndValue(1)
         self.animation.start()
+
         self.setFocus()
+
     def cancel_game(self):
         self.turn_timer.stop()
         QTimer.singleShot(1, self.switch_to_setup_window)
@@ -302,14 +308,21 @@ class ProDartLeague(QWidget):
 
     def switch_to_setup_window(self):
         screen_geo = self.screen().availableGeometry()
+        target_w, target_h = 700, 400
+
+        new_x = screen_geo.x() + (screen_geo.width() - target_w) // 2
+        new_y = screen_geo.y() + (screen_geo.height() - target_h) // 2
+
+        self.hide()
         self.stack.setCurrentIndex(0)
-        self.setGeometry(screen_geo.x()+(screen_geo.width()-700)//2, screen_geo.y()+(screen_geo.height()-400)//2, 700, 400)
-        center_point = self.screen().availableGeometry().center()
-        frame_geometry = self.frameGeometry()
-        frame_geometry.moveCenter(center_point)
-        self.move(frame_geometry.topLeft())
+        self.setGeometry(new_x, new_y, target_w, target_h)
+        self.show()
+
+        QApplication.processEvents()
+
         self.setup_effect = QGraphicsOpacityEffect()
         self.stack.currentWidget().setGraphicsEffect(self.setup_effect)
+
         self.setup_animation = QPropertyAnimation(self.setup_effect, b"opacity")
         self.setup_animation.setDuration(500)
         self.setup_animation.setStartValue(0)
