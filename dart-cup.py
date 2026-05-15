@@ -11,7 +11,7 @@ SETTINGS_FILE = "dart_settings.json"
 class ProDartLeague(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Dart Cup")
+        self.setWindowTitle("Dart Cup v.15.05.26")
         self.resize(700, 400)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         center_point = self.screen().availableGeometry().center()
@@ -411,13 +411,30 @@ class ProDartLeague(QWidget):
         self.update_display(); self.set_buttons_enabled(False); self.turn_timer.start(1000)
 
     def next_player(self):
-        if len(self.finished_players) >= len(self.players): return
+        # Prüfung ob Spiel zu Ende (Letzter Spieler fertig oder Einzelspieler fertig)
+        game_over = (len(self.players) > 1 and len(self.finished_players) >= len(self.players) - 1) or \
+                    (len(self.players) == 1 and len(self.finished_players) == 1)
+
+        if game_over:
+            self.score_label.setText("FINISH!")
+            self.score_label.setStyleSheet("font-size: 80px; font-weight: bold; color: #27ae60;")
+            self.info_label.setText("Spiel beendet")
+
+            # Button wieder aktivieren und umbenennen
+            self.back_btn.setEnabled(True)
+            self.back_btn.setText("Beenden")
+            self.back_btn.setStyleSheet("background-color: #27ae60; color: black; font-weight: bold; height: 35px;")
+            return
+
         self.darts_thrown = 0
         while True:
             self.current_player_idx = (self.current_player_idx + 1) % len(self.players)
-            if self.current_player_idx not in self.finished_players: break
+            if self.current_player_idx not in self.finished_players:
+                break
+
         self.score_at_start_of_turn = self.scores[self.current_player_idx]
-        self.set_buttons_enabled(True); self.update_display()
+        self.set_buttons_enabled(True)
+        self.update_display()
 
     def undo_hit(self):
         if not self.history: return
