@@ -1,4 +1,4 @@
-# Dart-Cup 🎯
+# Dart-Cup v15.05.26🎯
 
 Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian (KDE Plasma) konzipiert, läuft es dank Python und PyQt6 auf nahezu jedem modernen Betriebssystem (und Windows :D).
 
