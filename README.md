@@ -1,23 +1,29 @@
-Demnächst eine neue Version, die alte liegt im legacy-mit Branch
+Die alte Version liegt 4 ever im legacy-mit Branch.
 
 
-# Dart-Cup v15.05.26🎯
+# Dart-Cup v22.05.26🎯
 
-Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian (KDE Plasma) konzipiert, läuft es dank Python und PyQt6 auf nahezu jedem modernen Betriebssystem (und Windows :D).
+Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian konzipiert, läuft es dank Python und PyQt6 plattformübergreifend auf nahezu jedem modernen Betriebssystem (und Windows :D).
 
-## Features
-*   **Vielseitige Spielmodi:** 301, 501, 701, Around the Clock und der berüchtigte **Elimination-Modus**.
-*   **Regelwerk:** Optionale Unterstützung für Double In und Double Out.
-*   **Multiplayer:** Bis zu 8 Spieler gleichzeitig.
-*   **Intelligentes Scoreboard:** Automatische Platzierung, Highlight des Führenden und Erkennung von "Busts".
-*   **Interaktive Hilfe:** Kleines Info-Icon im Setup mit Tooltips zu den einzelnen Spielvarianten.
-*   **Undo-Funktion:** Ein Fehlwurf? Kein Problem, mit dem Undo-Button korrigierst du den letzten Pfeil.
-*   **Konsequentes Ende:** Sobald das Spiel vorbei ist, wechselt der Abbruch-Button zu "Beenden" – für einen sauberen Abschluss.
+### Features
 
-## Voraussetzungen
-*   **Python 3.11 oder höher:** Das Herzstück des Programms.
-*   **PyQt6:** Das Framework für die grafische Benutzeroberfläche.
+* **Vielseitige Spielmodi**: Zehn verschiedene Varianten, darunter Klassiker wie X01, Cricket, Killer und Shanghai.
+* **KI-Gegner**: Integriertes Bot-System mit zehn Schwierigkeitsgraden oder dynamischer Anpassung, inklusive Double-In/Out-Unterstützung.
+* **Statistik-Analyse**: Automatisches Speichern aller Partien als JSON-Dateien zur detaillierten Auswertung im Statistik-Modul.
+* **Effiziente Steuerung**: Bedienung per Maus oder bequem über Tastaturkürzel (0–9 sowie Tasten für Double/Triple).
+* **Zuverlässigkeit**: Integriertes Logging-System zur einfachen Fehlerdiagnose in `logs/error.log`.
 
+
+
+### Voraussetzungen
+
+* **Python 3.11+**: Ohne geht es nicht.
+* **PyQt6**: Das Framework für die grafische Benutzeroberfläche.
+
+### Installation & Start
+
+1. **Abhängigkeiten**: Stelle sicher, dass Python und PyQt6 installiert sind.
+2. **Ausführen**: Starte die Anwendung einfach über `python3 dart-cup.py` (bzw. `python` unter Windows) im Hauptverzeichnis.
 
 ## Installation & Start  
 
@@ -31,8 +37,8 @@ sudo apt update
 sudo apt install python3-pyqt6
 
 ### 3. starten:
-Datei "dart-cup.py" downloaden, ausführbar machen und im Ordner ein Terminal öffnen und ausführen:
-python3 dart-cup.py
+Den Odrdner "Dart_Cup" downloaden, "dart-cup.py" ausführbar machen und im Ordner ein Terminal öffnen und ausführen:
+python3 -B dart-cup.py
 
 ### 4. Desktopverknüpfung:
 Kopiere dir die dart-cup.desktop aud dein Desktop, passe den Pfad zu deiner dart-cup.py an und mache die Desktop-Datei ausführbar.
