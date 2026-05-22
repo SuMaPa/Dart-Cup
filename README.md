@@ -51,5 +51,10 @@ python -m pip install --upgrade pip
 pip install PyQt6  
 Datei "dart-cup.py" downloaden und ausführen  
 
-![Hauptmenü](screenshots/setup.15.05.2026.png)
-![Spielverlauf](screenshots/gameplay.15.05.2026.png)
+![Hauptmenü](screenshots/setup.22.05.2026.png)
+![Spielverlauf](screenshots/gameplay.22.05.2026)
+![Spielverlauf](screenshots/gameplay.22.05.2026.2)
+![Statistiken](screenshots/Statistiken.22.05.2026)
+![Statistiken](screenshots/Statistiken.22.05.2026.2)
+![Erklaerungen](screenshots/Erklaerungen.22.05.2026)
+
