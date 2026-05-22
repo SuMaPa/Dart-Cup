@@ -1,0 +1,11 @@
+Level, Einordnung & Treffsicherheit
+Level 01, "Betrunkene Eintagsfliege: Trifft mit Glück die Scheibe, oft daneben."
+Level 02, "Blutiger Anfänger: Die Scheibe wird häufiger getroffen, aber extremes Streufeld."
+Level 03, "Gelegenheitsspieler: Trifft meistens die Scheibe, zielt grob Richtung obere Hälfte."
+Level 04, "Kneipen-Spieler: Schafft es ab und zu, die 20er-Region konstant zu halten."
+Level 05, "Solider Hobbyspieler: Die Single 20 fällt regelmäßig, Nachbarfelder (1, 5) fangen die Fehler ab."
+Level 06, "Fortgeschrittener: Erste gezielte Triple-Treffer streuen rein, kaum noch Fehlwürfe ins Aus."
+Level 07, "Bezirksliga: Wirft kontrollierte Scores. Das Auschecken auf Doppel wird langsam gefährlich."
+Level 08, "Vereins-Spieler: Hohe Konstanz auf die Single 20, Triple-Treffer sind keine Seltenheit mehr."
+Level 09, "Profi-Niveau: Rasiert die 20er-Schiene. Extrem stark auf Doppel und beim Setup."
+Level 10, "Dart-Roboter: Fast nur noch T20. Verfehlt Checkouts so gut wie nie."
