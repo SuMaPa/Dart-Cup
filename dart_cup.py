@@ -37,6 +37,6 @@ if __name__ == '__main__':
     from ui.main_window import ProDartLeague
     app = QApplication(sys.argv)
     ex = ProDartLeague()
-    ex.setWindowTitle("Dart Cup v.19.05.26")
+    ex.setWindowTitle("Dart Cup v.22.05.26")
     ex.show()
     sys.exit(app.exec())
