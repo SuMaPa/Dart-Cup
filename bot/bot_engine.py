@@ -1,54 +1,97 @@
 import random
 from dart_cup import SPIEL_MODI
+
+# Imports für die KI-Funktionen
 try:
     from bot import bot_classic
+    from bot import bot_elimination
+    from bot import bot_mensch
+    from bot import bot_clock
 except ImportError:
     import bot_classic
+    import bot_elimination
+    import bot_mensch
+    import bot_clock
+
+# Imports für die echten Spiellogik-Funktionen (für den direkten Abgleich)
+try:
+    from spiel import classic
+    from spiel import elimination
+    from spiel import mensch
+    from spiel import clock
+except ImportError:
+    import classic
+    import elimination
+    import mensch
+    import clock
+
 
 def calculate_human_average(match_log, player_map):
     human_throws = [log for log in match_log if player_map.get(log["spieler"], "Mensch") == "Mensch"]
-    if not human_throws:
-        return 66.0
-    total_points = sum(log["wert"] * log["multiplikator"] for log in human_throws)
-    total_darts = len(human_throws)
-    return (total_points / total_darts) * 3 if total_darts > 0 else 40.0
 
-def get_bot_throw(game_mode, current_score, bot_type, match_log=[], player_map={}, double_in=False, double_out=False):
-    if bot_type.lower() == "dynamisch":
-        avg = calculate_human_average(match_log, player_map)
-        if avg < 25: level = 1
-        elif avg < 35: level = 2
-        elif avg < 42: level = 3
-        elif avg < 50: level = 4
-        elif avg < 58: level = 5
-        elif avg < 65: level = 6
-        elif avg < 75: level = 7
-        elif avg < 85: level = 8
-        elif avg < 95: level = 9
-        else: level = 10
+    if human_throws:
+        player_stats = {}
+        for log in human_throws:
+            p_name = log["spieler"]
+            if p_name not in player_stats:
+                player_stats[p_name] = {"points": 0, "darts": 0}
+            player_stats[p_name]["points"] += log["wert"] * log["multiplikator"]
+            player_stats[p_name]["darts"] += 1
+
+        averages = sorted([(stats["points"] / stats["darts"]) * 3 for stats in player_stats.values() if stats["darts"] > 0])
     else:
-        try:
-            level = int(bot_type.split()[-1])
-        except:
-            level = 1
+        bot_throws = [log for log in match_log if player_map.get(log["spieler"], "Mensch") != "Mensch" and log["spieler"] != "BotDynamisch"]
+        if not bot_throws:
+            return 45.0
 
-    is_x01_type = True
-    current_mode_key = None
-    for mode_name in SPIEL_MODI:
-        core_name = mode_name.split()[0]
-        if core_name in game_mode:
-            current_mode_key = mode_name
-            if len(SPIEL_MODI[mode_name]) > 3:
-                is_x01_type = SPIEL_MODI[mode_name][3]
+        bot_stats = {}
+        for log in bot_throws:
+            bot_name = log["spieler"]
+            if bot_name not in bot_stats:
+                bot_stats[bot_name] = {"points": 0, "darts": 0}
+            bot_stats[bot_name]["points"] += log["wert"] * log["multiplikator"]
+            bot_stats[bot_name]["darts"] += 1
+
+        averages = sorted([(stats["points"] / stats["darts"]) * 3 for stats in bot_stats.values() if stats["darts"] > 0])
+
+    if not averages:
+        return 45.0
+
+    n = len(averages)
+    if n % 2 == 1:
+        return averages[n // 2]
+    else:
+        return (averages[n // 2 - 1] + averages[n // 2]) / 2
+
+#def get_bot_throw(game_mode, current_score, bot_type, match_log=[], player_map={}, double_in=False, double_out=False):
+def get_bot_throw(game_mode, current_score, bot_type, match_log=[], player_map={}, double_in=False, double_out=False, variante="Standard"):
+    # Wir suchen die passende Prozess-Funktion aus SPIEL_MODI heraus
+    aktuelle_prozess_fn = None
+    for mode_name, mode_tuple in SPIEL_MODI.items():
+        if mode_name in game_mode:
+            aktuelle_prozess_fn = mode_tuple[0]  # Das erste Element ist die Prozess_Fn
             break
 
-    if is_x01_type:
-        # Hier werden double_in und double_out an bot_classic durchgereicht
-        return bot_classic.get_throw(current_score, level, double_in, double_out)
+    if bot_type.lower() == "dynamisch":
+        chosen_level = 5
+        current_avg = calculate_human_average(match_log, player_map)
+    else:
+        current_avg = None
+        try:
+            chosen_level = int(bot_type.split()[-1])
+        except:
+            chosen_level = 1
 
-    elif current_mode_key == "Cricket":
-        pass
-    elif "Clock" in current_mode_key:
-        pass
+    # Der geniale Abgleich direkt über die Funktionsobjekte statt wackeligem Text
+    if aktuelle_prozess_fn:
+        if aktuelle_prozess_fn == clock.process_around_the_clock:
+            #return bot_clock.get_throw(current_target=current_score, level=chosen_level, player_avg=current_avg)
+            return bot_clock.get_throw(current_target=current_score, level=chosen_level, variante=variante, player_avg=current_avg)
+        elif aktuelle_prozess_fn == elimination.process_elimination:
+            return bot_elimination.get_throw(current_score, chosen_level, double_in, double_out, player_avg=current_avg)
 
-    return (random.randint(1, 20), 1)
+        elif aktuelle_prozess_fn == mensch.process_mensch:
+            return bot_mensch.get_throw(current_score, chosen_level, double_in, double_out, player_avg=current_avg)
+
+    # Fallback für Classic X01 (classic.process_classic) und alles andere
+    return bot_classic.get_throw(current_score, chosen_level, double_in, double_out, player_avg=current_avg)

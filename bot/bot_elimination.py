@@ -49,39 +49,34 @@ def get_score_from_polar(r, angle):
     else:
         return (number, 1)
 
-def get_throw(current_score, level, double_in=False, double_out=False, player_avg=None):
-    if double_out and current_score <= 40 and current_score % 2 == 0:
-        target_num, target_mult = current_score // 2, 2
-    elif double_in:
-        target_num, target_mult = 20, 2
-    elif current_score > 60:
-        target_num, target_mult = 20, 3
-    elif current_score > 20:
-        if current_score <= 40 and current_score % 2 == 0:
-            target_num, target_mult = current_score // 2, 2
-        elif current_score <= 50 and current_score > 40:
-            target_num, target_mult = current_score - 20, 1
-        else:
-            target_num, target_mult = 20, 1
+def get_throw_clock(current_target, level, variante, player_avg=None):
+    # Basis-Streuung berechnen (wie bisher)
+    if player_avg is not None and player_avg > 0:
+        sigma = max(50.0 - (0.5 * player_avg), 0.5)
     else:
-        target_num, target_mult = current_score, 1
+        sigma = 120.0 if level == 1 else (0.1 + ((10 - level) ** 2.5) * 0.4)
 
+    # Zielvorgabe basierend auf der Variante
+    if variante == "Double-Only":
+        # Bot muss zwingend Double treffen
+        target_num, target_mult = current_target, 2
+    elif variante == "All-In":
+        # Bot spielt auf Sieg und visiert das Triple an, um schneller zu sein
+        target_num, target_mult = current_target, 3
+    else:
+        # Standard: Einfach das Segment treffen (Single)
+        target_num, target_mult = current_target, 1
+
+    # Koordinaten berechnen
     target_r, target_angle = get_coordinates_for_target(target_num, target_mult)
 
-    if player_avg is not None and player_avg > 0:
-        sigma = max(65.0 - (0.35 * player_avg), 5.0)
-    else:
-        sigma = 5.0 + (10.0 - level)**2 * 1.0
-
-    if double_out and target_mult == 2:
-        sigma = max(sigma * 0.5, 2.0)
-    if level < 6 and current_score <= 20:
-        sigma = sigma * 0.58
-
+    # Wurf ausführen
     target_x = target_r * math.cos(math.radians(target_angle))
     target_y = target_r * math.sin(math.radians(target_angle))
+
     final_x = random.gauss(target_x, sigma)
     final_y = random.gauss(target_y, sigma)
+
     final_r = math.sqrt(final_x**2 + final_y**2)
     final_angle = math.degrees(math.atan2(final_y, final_x))
 

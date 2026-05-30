@@ -1,9 +1,16 @@
-def init_classic(game):
-    start_score = int(game.variant_box.currentText()) if hasattr(game, 'variant_box') else 301
-    game.scores = [start_score] * len(game.players)
+def init_mensch(game):
+    game.start_score = int(game.variant_box.currentText()) if hasattr(game, 'variant_box') else 301
+    game.scores = [game.start_score] * len(game.players)
     game.has_entered = [not game.cb_double_in.isChecked()] * len(game.players)
 
-def process_classic(game, daten):
+def check_collision(game, current_idx, score):
+    if score == 0: return
+    for i in range(len(game.players)):
+        if i != current_idx and i not in game.finished_players and game.scores[i] == score:
+            game.scores[i] = game.start_score
+            game.is_bust[i] = True
+
+def process_mensch(game, daten):
     val = daten["val"]
     points = daten["points"]
     was_double = daten["was_double"]
@@ -31,4 +38,5 @@ def process_classic(game, daten):
         return
 
     game.scores[p] = new_score
+    check_collision(game, p, new_score)
     game.finish_dart()

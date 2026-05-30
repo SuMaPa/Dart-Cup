@@ -42,12 +42,17 @@ MODI_TEXTE = {
         "Double UND Triple der Zahl trifft, erzielt ein 'Shanghai' und gewinnt sofort!"
     ),
     "Halve It": (
-        "Das Spiel hat exakt 7 Runden für alle Spieler. Nacheinander müssen "
-        "20 - 19 - Beliebiges Double - 18 - 17 - Beliebiges Triple - Bull getroffen werden. "
-        "Jeder Treffer im Ziel wird addiert (Single = einfacher Wert, Double = doppelter Wert, "
-        "Triple = dreifacher Wert). Alles außerhalb des aktuellen Ziels bringt 0 Punkte. "
-        "Trifft man das Ziel mit keinem der 3 Darts, werden die aktuellen Punkte halbiert. "
-        "In der nächsten Runde geht es trotzdem mit dem nächsten Ziel weiter. "
+        "Es stehen drei Varianten zur Auswahl:<br>"
+        "1. Standard (12 Runden): Nacheinander müssen 12, 13, 14, ein Double, "
+        "15, 16, 17, ein Double, 18, 19, 20 und Bull getroffen werden.<br>"
+        "2. Kurz (7 Runden): Klassische Abfolge von 20, 19, ein Double, 18, 17, "
+        "ein Triple und Bull.<br>"
+        "3. Pro Challenge (9 Runden): Schärfere Variante mit 15, ein Double, 16, 17, 18, "
+        "ein Triple, 19, 20 und Bull.<br>"
+        "Für alle gilt: Jeder Treffer im aktuellen Ziel addiert Punkte (Single = einfach, "
+        "Double = doppelt, Triple = dreifach). Alles andere bringt 0 Punkte.<br>"
+        "Trifft ein Spieler das Ziel mit keinem der 3 Darts einer Aufnahme, werden seine "
+        "aktuellen Punkte halbiert.<br> In der nächsten Runde folgt das nächste Ziel.<br>"
     ),
     "Killer": (
         "Du wirfst deine eigene feste Zahl und startest mit z. B. 3 Leben. Die eigene Zahl "

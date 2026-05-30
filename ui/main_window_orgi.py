@@ -43,7 +43,7 @@ class ProDartLeague(QWidget):
         self.turn_timer.timeout.connect(self.next_player)
         self.stack = QStackedWidget()
         self.match_log = []
-        self.player_map = {}
+        self.player_map = {}  # Merkt sich, wer Mensch oder welcher Bot-Typ ist
 
         self.stack.addWidget(create_setup_ui(self))
         self.stack.addWidget(create_game_ui(self))
@@ -79,7 +79,7 @@ class ProDartLeague(QWidget):
             self.player_map,
             double_in=is_double_in,
             double_out=is_double_out,
-            variante=aktuelle_variante
+            variante=aktuelle_variante  # <-- NEU HIERÜBERGEBEN
         )
 
         self.modifier = mod
@@ -205,6 +205,21 @@ class ProDartLeague(QWidget):
         self.players = names[:8]
 
         self.player_map = {name: temp_map.get(name, "Mensch") for name in self.players}
+
+        """
+        haupt_modus = self.mode_box.currentText()
+        variante = self.variant_box.currentText()
+        is_x01_type = True
+
+        if haupt_modus in SPIEL_MODI:
+            if len(SPIEL_MODI[haupt_modus]) > 3:
+                is_x01_type = SPIEL_MODI[haupt_modus][3]
+        if is_x01_type:
+            basis_modus = haupt_modus.replace(" X01", "")
+            self.game_mode = f"{basis_modus} {variante}"
+        else:
+            self.game_mode = haupt_modus
+         """
 
         haupt_modus = self.mode_box.currentText()
         variante = self.variant_box.currentText()
@@ -417,7 +432,7 @@ class ProDartLeague(QWidget):
             return
 
         self.darts_thrown = 0
-        self.current_turn_kill = False
+        self.current_turn_kill = False  # KILL-Anzeige für den neuen Turn sperren
 
         while True:
             self.current_player_idx = (self.current_player_idx + 1) % len(self.players)
@@ -471,9 +486,7 @@ class ProDartLeague(QWidget):
             self.score_label.setText(txt)
             self.score_label.setStyleSheet("font-size: 90px; font-weight: bold; color: #3daee9;")
         hint = '(Warten auf Double-In)' if not self.has_entered[p] and is_x01 else ''
-        game_widget = self.stack.widget(1)
-        if hasattr(game_widget, 'info_label'):
-            game_widget.info_label.setText(f"Spieler: {self.players[p]} {hint}")
+        self.info_label.setText(f"Spieler: {self.players[p]} {hint}")
         self.dart_label.setText("Darts: " + "● " * self.darts_thrown + "○ " * (3 - self.darts_thrown))
         for i in range(len(self.players)):
             for col in range(3):

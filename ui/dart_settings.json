@@ -1,1 +1,1 @@
-{"names": ["Bot 1", "Bot 2", "", "", "", "", "", ""], "bot_types": ["Mensch", "Mensch", "Level 10", "Level 10", "Level 10", "Level 10", "Level 10", "Level 10"], "mode": "Mensch-\u00e4rgere-dich-nicht!", "variant": "101", "double_in": false, "double_out": false, "randomize": false, "play_to_end": true}
+{"names": ["10", "5", "m", "", "", "", "", ""], "bot_types": ["Level 10", "Level 5", "Mensch", "Level 5", "Level 6", "Level 8", "Level 9", "Level 1"], "mode": "Bob's 27", "variant": "Classic", "double_in": false, "double_out": false, "randomize": true, "play_to_end": true}

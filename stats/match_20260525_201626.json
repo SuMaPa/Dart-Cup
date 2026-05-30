@@ -1,0 +1,77 @@
+{
+    "datum": "2026-05-25 20:16:26",
+    "modus": "Classic 101",
+    "gewinner": "m",
+    "platzierungen": {
+        "m": 1,
+        "10": 2,
+        "5": 3
+    },
+    "teilnehmer": [
+        "10",
+        "5",
+        "m"
+    ],
+    "verlauf": [
+        {
+            "spieler": "10",
+            "wurf": "T20",
+            "wert": 20,
+            "multiplikator": 3
+        },
+        {
+            "spieler": "10",
+            "wurf": "20",
+            "wert": 20,
+            "multiplikator": 1
+        },
+        {
+            "spieler": "10",
+            "wurf": "20",
+            "wert": 20,
+            "multiplikator": 1
+        },
+        {
+            "spieler": "5",
+            "wurf": "20",
+            "wert": 20,
+            "multiplikator": 1
+        },
+        {
+            "spieler": "5",
+            "wurf": "1",
+            "wert": 1,
+            "multiplikator": 1
+        },
+        {
+            "spieler": "5",
+            "wurf": "5",
+            "wert": 5,
+            "multiplikator": 1
+        },
+        {
+            "spieler": "m",
+            "wurf": "T20",
+            "wert": 20,
+            "multiplikator": 3
+        },
+        {
+            "spieler": "m",
+            "wurf": "D20",
+            "wert": 20,
+            "multiplikator": 2
+        },
+        {
+            "spieler": "m",
+            "wurf": "1",
+            "wert": 1,
+            "multiplikator": 1
+        },
+        {
+            "spieler": "10",
+            "wurf": "1",
+            "wert": 1,
+            "multiplikator": 1
+        }
+    ]
+}

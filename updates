@@ -4,9 +4,11 @@ SpielModi: Bob's 27, Classic X01, Elimination, Mensch-ärgere-dich-nicht!, Crick
 PUNKTE_VARIANTEN: 101, 301, 501, 701, 901
 Bots: Aktuell funktionieren die nur bei Classic X01, Elimination & Mensch-ärgere-dich-nicht! anständig.
 Statistiken: Ja, muss aber massiv ausgebaut und überarbeitet werden.
-
+Version: 22.05.2026
+Bots: Datein angepasst, Around the Clock Bot hinzugefügt
 Was kommt: 
 Ne Erklärung der Botlevel
 Bots in den anderen Modi
 Statistiken updates
 Bugfixes überall ^^
+langfristig: Kameras? (ma gucken)

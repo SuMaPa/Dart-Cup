@@ -83,7 +83,7 @@ class StatsWindow(QWidget):
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(title)
         self.tabs = QTabWidget()
-        self.tabs.setFocusPolicy(Qt.FocusPolicy.NoFocus)  # Fokus-Linie komplett unterdrücken
+        self.tabs.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.init_history_tab()
         self.init_player_tab()
         main_layout.addWidget(self.tabs)

@@ -43,7 +43,7 @@ class ProDartLeague(QWidget):
         self.turn_timer.timeout.connect(self.next_player)
         self.stack = QStackedWidget()
         self.match_log = []
-        self.player_map = {}
+        self.player_map = {}  # Merkt sich, wer Mensch oder welcher Bot-Typ ist
 
         self.stack.addWidget(create_setup_ui(self))
         self.stack.addWidget(create_game_ui(self))
@@ -69,8 +69,10 @@ class ProDartLeague(QWidget):
         is_double_in = not self.has_entered[p]
         is_double_out = self.double_out
 
+        # NEU: Aktuelle Variante aus der Variant-Box auslesen
         aktuelle_variante = self.variant_box.currentText() if hasattr(self, 'variant_box') else "Standard"
 
+        # Bot wirft mit der neuen Variante als Parameter
         val, mod = get_bot_throw(
             self.game_mode,
             current_score,
@@ -79,12 +81,13 @@ class ProDartLeague(QWidget):
             self.player_map,
             double_in=is_double_in,
             double_out=is_double_out,
-            variante=aktuelle_variante
+            variante=aktuelle_variante  # <-- NEU HIERÜBERGEBEN
         )
 
         self.modifier = mod
         self.num_clicked(val)
 
+        # Nächsten Pfeil triggern, wenn derselbe Bot noch am Zug ist
         next_name = self.players[self.current_player_idx]
         next_type = self.player_map.get(next_name, "Mensch")
         if self.darts_thrown < 3 and not self.is_bust[p] and p not in self.finished_players and next_type != "Mensch":
@@ -187,6 +190,7 @@ class ProDartLeague(QWidget):
         self.num_clicked(25)
 
     def start_game(self):
+        # Temp Mapping erstellen, bevor wir die Namen shuffeln
         temp_map = {}
         for i, inp in enumerate(self.player_inputs):
             name = inp.text().strip()
@@ -204,7 +208,23 @@ class ProDartLeague(QWidget):
 
         self.players = names[:8]
 
+        # Finale Zuweisung für das laufende Spiel sichern
         self.player_map = {name: temp_map.get(name, "Mensch") for name in self.players}
+
+        """
+        haupt_modus = self.mode_box.currentText()
+        variante = self.variant_box.currentText()
+        is_x01_type = True
+
+        if haupt_modus in SPIEL_MODI:
+            if len(SPIEL_MODI[haupt_modus]) > 3:
+                is_x01_type = SPIEL_MODI[haupt_modus][3]
+        if is_x01_type:
+            basis_modus = haupt_modus.replace(" X01", "")
+            self.game_mode = f"{basis_modus} {variante}"
+        else:
+            self.game_mode = haupt_modus
+         """
 
         haupt_modus = self.mode_box.currentText()
         variante = self.variant_box.currentText()
@@ -244,6 +264,7 @@ class ProDartLeague(QWidget):
         self.update_display()
         QTimer.singleShot(1, self.switch_to_game_window)
 
+        # Bot-Check direkt beim Spielstart für Spieler 1
         first_player = self.players[0]
         if self.player_map.get(first_player, "Mensch") != "Mensch":
             self.set_buttons_enabled(False)
@@ -311,6 +332,7 @@ class ProDartLeague(QWidget):
         if not hasattr(self, 'current_turn_kill'):
             self.current_turn_kill = False
 
+        # Status inklusive des neuen Kill-Flags sichern
         state = (list(self.scores), list(self.has_entered), self.current_player_idx, self.darts_thrown, self.score_at_start_of_turn, [list(d) for d in self.last_darts], list(self.is_bust), list(self.finished_players), list(self.match_log), self.current_turn_kill)
         self.history.append(state)
 
@@ -351,6 +373,7 @@ class ProDartLeague(QWidget):
             verarbeitungs_funktion = modus_daten[0]
             verarbeitungs_funktion(self, daten)
 
+        # Prüfen, ob exakt durch DIESEN Wurf ein neuer Kill generiert wurde
         busted_before = getattr(self, "busted_before_turn", [False] * len(self.players))
         for i in range(len(self.players)):
             if self.is_bust[i] and not busted_before[i]:
@@ -417,13 +440,14 @@ class ProDartLeague(QWidget):
             return
 
         self.darts_thrown = 0
-        self.current_turn_kill = False
+        self.current_turn_kill = False  # KILL-Anzeige für den neuen Turn sperren
 
         while True:
             self.current_player_idx = (self.current_player_idx + 1) % len(self.players)
             if self.current_player_idx not in self.finished_players:
                 break
 
+        # NUR die rote Farbe des Spielers löschen, der JETZT an der Reihe ist
         self.is_bust[self.current_player_idx] = False
 
         self.score_at_start_of_turn = self.scores[self.current_player_idx]
@@ -458,6 +482,7 @@ class ProDartLeague(QWidget):
         is_x01 = SPIEL_MODI[haupt_modus][3] if haupt_modus in SPIEL_MODI and len(SPIEL_MODI[haupt_modus]) > 3 else True
         target_val = self.scores[p]
 
+        # Nutzt jetzt das präzise Turn-Flag statt der globalen Liste
         has_kill = (ui_behavior == "collision_detection") and getattr(self, "current_turn_kill", False)
 
         if has_kill and self.darts_thrown > 0:
@@ -471,9 +496,7 @@ class ProDartLeague(QWidget):
             self.score_label.setText(txt)
             self.score_label.setStyleSheet("font-size: 90px; font-weight: bold; color: #3daee9;")
         hint = '(Warten auf Double-In)' if not self.has_entered[p] and is_x01 else ''
-        game_widget = self.stack.widget(1)
-        if hasattr(game_widget, 'info_label'):
-            game_widget.info_label.setText(f"Spieler: {self.players[p]} {hint}")
+        self.info_label.setText(f"Spieler: {self.players[p]} {hint}")
         self.dart_label.setText("Darts: " + "● " * self.darts_thrown + "○ " * (3 - self.darts_thrown))
         for i in range(len(self.players)):
             for col in range(3):
