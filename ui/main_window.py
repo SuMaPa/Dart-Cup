@@ -84,7 +84,8 @@ class ProDartLeague(QWidget):
 
         self.modifier = mod
         self.num_clicked(val)
-
+        if p in self.finished_players or len(self.finished_players) > 0:
+            return
         next_name = self.players[self.current_player_idx]
         next_type = self.player_map.get(next_name, "Mensch")
         if self.darts_thrown < 3 and not self.is_bust[p] and p not in self.finished_players and next_type != "Mensch":
@@ -380,6 +381,10 @@ class ProDartLeague(QWidget):
         else:
             game_over = len(self.finished_players) > 0
         if game_over:
+            # Absolute Notbremse für alle Bot-Aktivitäten:
+            self.bot_timer.stop()
+            self.turn_timer.stop()
+
             try:
                 platzierungen = {}
                 if self.cb_play_to_end.isChecked():
@@ -408,12 +413,27 @@ class ProDartLeague(QWidget):
                     json.dump(match_data, f, indent=4, ensure_ascii=False)
             except Exception as e:
                 logger.error(f"Fehler beim Speichern der Statistik: {e}", exc_info=True)
+
             self.score_label.setText("FINISH!")
             self.score_label.setStyleSheet("font-size: 80px; font-weight: bold; color: #27ae60;")
-            self.info_label.setText("Spiel beendet")
+
+            # Wichtig, damit die GUI wieder reagiert und man das Spiel verlassen kann:
+            if hasattr(self, 'info_label'):
+                self.info_label.setText("Spiel beendet")
             self.back_btn.setEnabled(True)
             self.back_btn.setText("Beenden")
             self.back_btn.setStyleSheet("background-color: #27ae60; color: black; font-weight: bold; height: 35px;")
+
+            # 1. Zuerst alle Dart-Eingabebuttons sperren
+            self.set_buttons_enabled(False)
+
+            # 2. JETZT den Beenden-Button explizit und als allerletztes aktivieren!
+            if hasattr(self, 'back_btn'):
+                self.back_btn.setEnabled(True)
+                self.back_btn.setVisible(True)
+                self.back_btn.setText("Beenden")
+                self.back_btn.setStyleSheet("background-color: #27ae60; color: black; font-weight: bold; height: 35px;")
+                self.back_btn.setFocus()
             return
 
         self.darts_thrown = 0
