@@ -1,7 +1,7 @@
 Die alte Version liegt 4 ever im legacy-mit Branch.
 
 
-# Dart-Cup v25.05.26🎯
+# Dart-Cup v01.06.26🎯
 
 Ein schlankes und intuitives Dart-Scoreboard. Ursprünglich für Debian konzipiert, läuft es dank Python und PyQt6 plattformübergreifend auf nahezu jedem modernen Betriebssystem (und Windows :D).
 
