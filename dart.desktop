@@ -1,0 +1,13 @@
+[Desktop Entry]
+Categories=Game;
+Comment[de_DE]=Dart Scoreboard Tracker
+Comment=Dart Scoreboard Tracker
+Name[de_DE]=Dart Cup
+Name=Dart Cup
+Exec=python3 -B /pfad/zu/deiner/Dart_Cup/dart_cup.py
+Icon=/pfad/zu/deiner/Dart_Cup/ui/Blindfolded-Darts-Player.svg
+Path=/pfad/zu/deiner/Dart_Cup/
+StartupWMClass=python3
+StartupNotify=true
+Terminal=false
+Type=Application
