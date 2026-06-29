@@ -1,14 +1,23 @@
 def init_mensch(game):
-    game.start_score = int(game.variant_box.currentText()) if hasattr(game, 'variant_box') else 301
+    game.start_score = (
+        int(game.variant_box.currentText()) if hasattr(game, "variant_box") else 301
+    )
     game.scores = [game.start_score] * len(game.players)
     game.has_entered = [not game.cb_double_in.isChecked()] * len(game.players)
 
+
 def check_collision(game, current_idx, score):
-    if score == 0: return
+    if score == 0:
+        return
     for i in range(len(game.players)):
-        if i != current_idx and i not in game.finished_players and game.scores[i] == score:
+        if (
+            i != current_idx
+            and i not in game.finished_players
+            and game.scores[i] == score
+        ):
             game.scores[i] = game.start_score
             game.is_bust[i] = True
+
 
 def process_mensch(game, daten):
     val = daten["val"]
@@ -30,7 +39,11 @@ def process_mensch(game, daten):
         game.wait_and_next_player()
         return
 
-    if (new_score < 0) or (new_score == 1 and game.double_out) or (new_score == 0 and game.double_out and not was_double):
+    if (
+        (new_score < 0)
+        or (new_score == 1 and game.double_out)
+        or (new_score == 0 and game.double_out and not was_double)
+    ):
         game.scores[p] = game.score_at_start_of_turn
         game.is_bust[p] = True
         game.darts_thrown += 1

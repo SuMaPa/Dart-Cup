@@ -12,6 +12,7 @@ SEGMENTS = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 
 SEGMENT_ANGLE = 18.0
 HALF_SEGMENT = 9.0
 
+
 def get_coordinates_for_target(number, multiplier):
     if number == 25:
         if multiplier == 2:
@@ -31,6 +32,7 @@ def get_coordinates_for_target(number, multiplier):
         r = (BULL_RADIUS + INNER_TREBLE) / 2
     return r, angle
 
+
 def get_score_from_polar(r, angle):
     if r > BOARD_RADIUS:
         return (0, 1)
@@ -48,6 +50,7 @@ def get_score_from_polar(r, angle):
         return (number, 2)
     else:
         return (number, 1)
+
 
 def get_throw(current_score, level, double_in=False, double_out=False, player_avg=None):
     if double_out and current_score <= 40 and current_score % 2 == 0:
@@ -71,7 +74,7 @@ def get_throw(current_score, level, double_in=False, double_out=False, player_av
     if player_avg is not None and player_avg > 0:
         sigma = max(65.0 - (0.35 * player_avg), 5.0)
     else:
-        sigma = 5.0 + (10.0 - level)**2 * 1.0
+        sigma = 5.0 + (10.0 - level) ** 2 * 1.0
 
     if double_out and target_mult == 2:
         sigma = max(sigma * 0.5, 2.0)

@@ -1,0 +1,179 @@
+[MODUS]Bob's 27
+[TEXT]## Grundregeln
+• Startpunktzahl: Jeder Spieler startet mit exakt 27 Punkten.
+• Ablauf: In jeder Runde werfen alle Spieler auf dasselbe vorgegebene Doppelfeld (Runde 1 = D1,
+Runde 2 = D2 ... Runde 20 = D20, Runde 21 = D-Bull).
+• Punktejagd: Jeder Treffer im richtigen Doppel bringt den doppelten Wert der Zahl als Pluspunkte.
+• Die Strafe: Trifft ein Spieler das vorgegebene Doppel mit keinem der 3 Darts, wird der doppelte
+Wert der Zahl abgezogen.
+• Game Over: Fällt der Punktestand auf 0 oder weniger, ist das Spiel sofort vorbei.
+
+## Varianten
+* Variante 1: CLASSIC
+Start mit exakt 27 Punkten und dem harten Knock-out bei Null.
+* Variante 2: ANFÄNGER
+Start mit 50 Punkten, um ein frühzeitiges Ausscheiden in den ersten Runden zu verhindern.
+* Variante 3: OPEN END
+Start mit 27 Punkten, aber es wird garantiert bis zur finalen Runde 21 durchgespielt – selbst wenn das
+Punktekonto die Nullachse durchbricht.
+
+------------------------------
+[MODUS]Classic X01
+[TEXT]## Grundregeln
+• Das Prinzip: Jeder Spieler startet mit einer gewählten Punktzahl (typischerweise 101, 301, 501,
+701 oder 901) und muss diese exakt auf 0 herunterspielen.
+• Double-In Option: Das Spiel und das Punktesammeln starten erst, wenn ein beliebiges
+Doppelfeld getroffen wird.
+• Double-Out Option: Das Spiel kann nur durch einen Treffer im passenden Doppelfeld beendet
+werden, das den Punktestand exakt auf Null bringt.
+
+------------------------------
+[MODUS]Elimination
+[TEXT]## Grundregeln
+* Start: Alle Spieler starten bei einem festgesetzten Limit (301, 501 oder 701 Punkte).
+* Das Ziel: Punkte abbauen, wobei das exakte Treffen gegnerischer Punktstände bestraft wird.
+* Taktik: Taktisches Finishen und Rechnen ist hier der Schlüssel zum Erfolg.
+
+Hast du am Ende deines Zuges (nach dem 3. Dart) exakt die Punktzahl eines Gegners erreicht, fliegt dieser gnadenlos zurück auf das Start-Limit!
+
+------------------------------
+[MODUS]Mensch-ärgere-dich-nicht!
+[TEXT]## Grundregeln
+* Start: Alle Spieler starten bei einem festgesetzten Limit (301, 501 oder 701 Punkte).
+* Das Ziel: Punkte abbauen, wobei das exakte Treffen gegnerischer Punktstände bestraft wird.
+* Taktik: Taktisches Finishen und Rechnen ist hier der Schlüssel zum Erfolg.
+
+Jeder einzelne Dart zählt sofort!
+Sobald deine Punktzahl zwischendurch exakt die eines Gegners touchiert, fliegt er sofort aufs Limit zurück.
+Perfekt für maximalen Frust!
+
+------------------------------
+[MODUS]Cricket
+[TEXT]## Grundregeln
+* Die Zielsegmente: Es wird ausschließlich auf die Felder 15, 16, 17, 18, 19, 20 und das Bull geworfen.
+* Öffnen von Feldern: Jedes dieser Felder muss vom Spieler zuerst dreimal getroffen werden, um es zu „öffnen“. Ein Triple zählt als 3 Treffer, ein Doppel als 2 Treffer.
+* Punkte sammeln: Sobald du ein Feld geöffnet hast, kannst du bei weiteren Treffern darauf Punkte verbuchen – allerdings nur so lange, wie das Feld bei den Gegnern noch „offen“ (von ihnen nicht auch dreimal getroffen) ist.
+* Schließen von Feldern: Treffen alle Spieler das Feld dreimal, ist es komplett „geschlossen“ und es können darauf keine Punkte mehr erzielt werden.
+* Siegbedingung: Wer alle Felder geschlossen hat und die meisten Punkte besitzt, gewinnt das Match.
+
+## Varianten
+* Variante 1: Standard
+Es gelten die klassischen Grundregeln. Wer alle Felder offen/geschlossen hat und die meisten Punkte besitzt, gewinnt.
+* Variante 2: Cut-Throat (Die Schadenfreude-Variante)
+Perfekt für 3 oder mehr Spieler. Weitere Punkte auf deinen geöffneten Feldern werden nicht dir, sondern allen Gegnern gutgeschrieben, die dieses Feld noch offen haben. Es gewinnt, wer alle Felder getroffen hat und die NIEDRIGSTE Punktzahl besitzt.
+* Variante 3: No Score (Die reine Präzisions-Variante)
+Das komplette Punktesystem wird gestrichen. Es geht rein darum, die Segmente 15-20 und das Bull jeweils dreimal zu treffen. Wer zuerst alle Felder „geschlossen“ hat, gewinnt sofort.
+
+------------------------------
+[MODUS]Around the Clock
+[TEXT]## Grundregeln
+Das Ziel: Die Spieler müssen die Zahlen von 1 bis 20 in der exakten Reihenfolge treffen. Wer zuerst das Bullseye (25/50) nach der 20 trifft, gewinnt das Spiel.
+Der Ablauf: Erst wenn die aktuelle Zahl getroffen wurde, darf auf die nächste Zahl geworfen werden.
+Wertung: Jeder reguläre Treffer bringt dich genau 1 Feld weiter (von der 1 auf die 2 usw.).
+
+## Varianten
+* Variante 1: Standard
+Triff von 1-20 und dann das Bullseye (25/50)
+* Variante 2: Double Only
+Es zählen ausschließlich Treffer im Double-Segment, um ein Feld weiterzurücken.
+* Variante 2: All In (Punkte-Variante)
+Single zählt einfach (+1 Feld), Double zweifach (+2 Felder) und Triple dreifach (+3 Felder vorwärts).
+
+------------------------------
+[MODUS]Halve It
+[TEXT]## Grundregeln (Gilt für alle Varianten)
+
+* Das Prinzip: Jeder Spieler wirft pro Runde 3 Darts auf das vorgegebene Ziel.
+* Punkte: Treffer werden addiert (Single zählt einfach, Doppel zweifach, Triple dreifach).
+* Die Strafe: Verfehlen alle 3 Darts einer Runde das Ziel komplett, wird der aktuelle Punktestand des Spielers halbiert.
+* Gewinner: Wer nach der letzten Runde die meisten Punkte hat, gewinnt.
+
+## 1. Variante: Standard
+
+* Rundenzahl: 9 Runden
+* Reihenfolge der Ziele:
+   Runde 1: Feld 15
+   Runde 2: Feld 16
+   Runde 3: Ein beliebiges Doppel (äußerer Ring)
+   Runde 4: Feld 17
+   Runde 5: Feld 18
+   Runde 6: Ein beliebiges Triple (innerer Ring)
+   Runde 7: Feld 19
+   Runde 8: Feld 20
+   Runde 9: Bull (Outer Bull & Bullseye zählen)
+
+
+## 2. Variante: Kurz
+Perfekt für eine schnelle Runde zwischendurch.
+
+* Rundenzahl: 6 Runden
+* Reihenfolge der Ziele:
+   Runde 1: Feld 15
+   Runde 2: Feld 16
+   Runde 3: Feld 17
+   Runde 4: Feld 18
+   Runde 5: Feld 19
+   Runde 6: Feld 20
+
+
+## 3. Variante: Pro Challenge
+Diese Variante richtet sich an ambitionierte Spieler.
+
+* Rundenzahl: 8 Runden
+* Reihenfolge der Ziele:
+   Runde 1: Scoring-Runde (Punkte auf dem ganzen Board sammeln als Startkapital)
+   Runde 2: Ein beliebiges Triple
+   Runde 3: Ein beliebiges Doppel
+   Runde 4: rote Feld
+   Runde 5: Feld Triple 20
+   Runde 6: Feld Double 20
+   Runde 7: Drei verschiedene Farben treffen
+   Runde 8: Bullseye
+
+------------------------------
+[MODUS]Killer
+[TEXT]## Grundregeln (Gilt für alle Varianten)
+* Zahlenvergabe: Jeder Spieler wirft einmal mit der nicht-dominanten Hand auf das Board. Die getroffene Zahl ist seine feste Nummer für das gesamte Spiel. Jede Zahl darf nur einmal vergeben werden.
+
+## Varianten
+* Variante 1: Standard (Taktischer Einstieg)
+  Unterteilt in zwei strategische Phasen:
+  - Phase 1 (Leben sammeln): Start bei 0 Leben. Du musst deine eigene Zahl treffen, um bis zu maximal 3 Leben aufzubauen (Single = 1, Double = 2, Triple = 3). Mit Erreichen von 3 Leben wirst du zum „Killer“.
+  - Phase 2 (Die Jagd): Als Killer feuerst du auf gegnerische Zahlen, um ihnen Leben abzuziehen (Single = -1, Double = -2, Triple = -3). Wer 0 Leben hat, fliegt raus.
+  - Optionen: Double In (Aufbau startet erst nach eigenem Doppel) / Double Out (Der finale Todesstoß auf 0 Leben muss zwingend über ein Doppel oder Triple erfolgen).
+
+* Variante 2: Direkt-Killer (Sofortige Jagd)
+  Überspringt die Aufbauphase komplett:
+  - Der Start: Jeder Spieler startet sofort mit 3 Leben und ist ab Pfeil 1 ein aktiver Killer.
+  - Das Punktesystem: Beschuss gegnerischer Felder zieht Leben ab (Single = -1, Double = -2, Triple = -3).
+  - Eigene Fehler: Triffst du versehentlich deine eigene Zahl im Doppel/Triple, ziehst du dir selbst 1 Leben ab.
+  - Optionen: Double In (Killer-Funktion ist bis zu einem ersten Treffer auf dem eigenen Doppel gesperrt) / Double Out (wie Standard-Variante).
+
+* Variante 3: Totaler Krieg (Total War)
+  Die aggressivste und unberechenbarste Variante auf maximalen Schaden:
+  - Der Start: Jeder startet sofort mit 3 Leben und voller Angreifer-Erlaubnis.
+  - Massiver Schaden: Ein Treffer im gegnerischen Double zieht 2 Leben ab. Ein Treffer im gegnerischen Triple eliminiert den Spieler sofort komplett aus dem Spiel (One-Shot-Kill).
+  - Eigene Fehler: Versehentliche Treffer auf das eigene Double/Triple ziehen dir selbst sofort 2 bzw. 3 Leben ab.
+
+------------------------------
+[MODUS]Shanghai
+[TEXT]## Varianten
+* Variante 1: Standard (Punkte & Blitzsieg)
+  Kombination aus konsequenter Punktejagd und plötzlichem K.o.-Sieg.
+  - Ablauf: 20 Runden (von Feld 1 bis Feld 20). Pro Runde 3 Darts auf die Zahl der aktuellen Runde. Andere Felder bringen 0 Punkte.
+  - Wertung: Single = einfacher Wert, Double = doppelter Wert, Triple = dreifacher Wert.
+  - Der Shanghai-Wurf: Triffst du innerhalb einer Runde mit den 3 Darts jeweils genau einmal das Single, Double und Triple der aktuellen Zahl, hast du das Spiel sofort komplett gewonnen – unabhängig vom Punktestand.
+  - Taktik-Tipp: Wirf immer vom schwersten zum leichtesten Feld: Dart 1 auf Triple, Dart 2 auf Double, Dart 3 auf Single.
+
+* Variante 2: Double-Only (Präzisionstraining)
+  Ein extrem hartes Training für den äußeren Ring des Dartboards.
+  - Ablauf: Identisch mit der Standard-Variante (Runden 1 bis 20).
+  - Wertung: Ausschließlich Treffer im Double-Ring zählen und bringen den doppelten Wert der Zahl. Singles und Triples gelten als Fehlwürfe (0 Punkte).
+  - Besonderheit: Kein Shanghai-Blitzsieg möglich. Es gewinnt stur der höchste Punktestand nach 20 Runden.
+
+* Variante 3: Shanghai-Finish (Leg-Simulation)
+  Simuliert das professionelle Beenden eines klassischen 501-Legs.
+  - Ablauf: Keine Runden von 1 bis 20. Es wird ausnahmslos auf die Zahl 20 geworfen. Ziel ist es, mit 3 Darts exakt 120 Restpunkte auf Null zu bringen.
+  - Die Pflicht-Reihenfolge: 1. Dart = Triple 20 (60 Punkte) -> 2. Dart = Single 20 (20 Punkte) -> 3. Dart = Double 20 (40 Punkte = 0 Rest).
+  - Fehlwürfe: Wird im ersten Dart nur das Single getroffen, ist das Shanghai-Finish mathematisch gescheitert. Der Spieler muss improvisieren, um das Leg anderweitig über ein Doppel zu beenden.
+

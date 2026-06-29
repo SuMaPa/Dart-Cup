@@ -1,4 +1,3 @@
-Level, Einordnung & Treffsicherheit
 Level 01, "Betrunkene Eintagsfliege: Trifft mit Glück die Scheibe, oft daneben."
 Level 02, "Blutiger Anfänger: Die Scheibe wird häufiger getroffen, aber extremes Streufeld."
 Level 03, "Gelegenheitsspieler: Trifft meistens die Scheibe, zielt grob Richtung obere Hälfte."

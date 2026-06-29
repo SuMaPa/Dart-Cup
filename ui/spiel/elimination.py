@@ -1,3 +1,6 @@
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
+
+
 def init_elimination(game):
     game.start_score = (
         int(game.variant_box.currentText()) if hasattr(game, "variant_box") else 301
@@ -53,3 +56,17 @@ def process_elimination(game, daten):
     game.scores[p] = new_score
     check_elimination(game, p, new_score)
     game.finish_dart()
+
+
+def get_stats_widget(match_data):
+    scroll = QScrollArea()
+    scroll.setWidgetResizable(True)
+    w = QWidget()
+    layout = QVBoxLayout(w)
+    layout.addWidget(QLabel("<b>Auswertung: Elimination</b>"))
+    layout.addWidget(
+        QLabel(f"Letzter Überlebender: {match_data.get('gewinner', 'N/A')}")
+    )
+    layout.addStretch()
+    scroll.setWidget(w)
+    return scroll

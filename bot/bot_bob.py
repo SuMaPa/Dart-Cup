@@ -1,3 +1,4 @@
+# bot/bot_bob.py
 import random
 import math
 
@@ -15,18 +16,15 @@ HALF_SEGMENT = 9.0
 
 def get_coordinates_for_target(number, multiplier):
     if number == 25:
-        # Bullseye (Double) oder Outer Bull (Single)
-        return (
-            (0.0, 0.0)
-            if multiplier == 2
-            else ((BULLSEYE_RADIUS + BULL_RADIUS) / 2, 0.0)
-        )
+        if multiplier == 2:
+            return 0.0, 0.0
+        else:
+            return (BULLSEYE_RADIUS + BULL_RADIUS) / 2, 0.0
     try:
         idx = SEGMENTS.index(number)
     except ValueError:
         idx = 0
     angle = 90.0 - (idx * SEGMENT_ANGLE)
-    # Zielradien für die Segmente
     if multiplier == 3:
         r = (INNER_TREBLE + OUTER_TREBLE) / 2
     elif multiplier == 2:
@@ -55,32 +53,39 @@ def get_score_from_polar(r, angle):
         return (number, 1)
 
 
-def get_throw(current_target, level, variante="Standard", player_avg=None):
-
-    if player_avg is not None and player_avg > 0:
-        sigma = max(50.0 - (0.5 * player_avg), 0.5)
+def get_throw(level, player_avg=None, game=None):
+    if game is None or not hasattr(game, "bobs_target"):
+        # Fallback falls kein Spielzustand auslesbar ist
+        target_num = 20
     else:
-        sigma = 120.0 if level == 1 else (0.1 + ((10 - level) ** 2.5) * 0.4)
+        p = game.current_player_idx
+        # Zielt stur auf das aktuelle Runden-Doppel des Bots
+        target_num = game.bobs_target[p]
 
-    # Zielvorgabe: Hier wird jetzt strikt nach Variante unterschieden[cite: 8]
-    if current_target == 25:
-        target_num, target_mult = 25, 2  # Bullseye-Ziel[cite: 8]
-    else:
-        if variante == "Double-Only":
-            target_num, target_mult = current_target, 2  # Double Ring[cite: 8]
-        elif variante == "All-In":
-            target_num, target_mult = current_target, 3  # Triple Ring[cite: 8]
-        else:
-            target_num, target_mult = current_target, 1  # Single Segment[cite: 8]
+    # In Bob's 27 zielen wir IMMER auf das Double (Multiplier = 2)
+    target_mult = 2
 
     target_r, target_angle = get_coordinates_for_target(target_num, target_mult)
 
+    # Streuung (Sigma) berechnen
+    if player_avg is not None and player_avg > 0:
+        sigma = max(65.0 - (0.35 * player_avg), 5.0)
+    else:
+        sigma = 5.0 + (10.0 - level) ** 2 * 1.0
+
+    # Da Doppel-Segmente schmaler sind, passen wir das Fokusverhalten
+    # für stärkere Bot-Level an, um realistische Trefferraten zu erzielen
+    if level >= 6:
+        sigma = sigma * 0.9
+    if level >= 9:
+        sigma = sigma * 0.8
+
+    # Wurf ausführen
     target_x = target_r * math.cos(math.radians(target_angle))
     target_y = target_r * math.sin(math.radians(target_angle))
-
     final_x = random.gauss(target_x, sigma)
     final_y = random.gauss(target_y, sigma)
-
     final_r = math.sqrt(final_x**2 + final_y**2)
     final_angle = math.degrees(math.atan2(final_y, final_x))
+
     return get_score_from_polar(final_r, final_angle)

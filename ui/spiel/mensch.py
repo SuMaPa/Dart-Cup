@@ -1,4 +1,7 @@
-def init_elimination(game):
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
+
+
+def init_mensch(game):
     game.start_score = (
         int(game.variant_box.currentText()) if hasattr(game, "variant_box") else 301
     )
@@ -6,7 +9,7 @@ def init_elimination(game):
     game.has_entered = [not game.cb_double_in.isChecked()] * len(game.players)
 
 
-def check_elimination(game, current_idx, score):
+def check_collision(game, current_idx, score):
     if score == 0:
         return
     for i in range(len(game.players)):
@@ -19,7 +22,7 @@ def check_elimination(game, current_idx, score):
             game.is_bust[i] = True
 
 
-def process_elimination(game, daten):
+def process_mensch(game, daten):
     val = daten["val"]
     points = daten["points"]
     was_double = daten["was_double"]
@@ -51,5 +54,17 @@ def process_elimination(game, daten):
         return
 
     game.scores[p] = new_score
-    check_elimination(game, p, new_score)
+    check_collision(game, p, new_score)
     game.finish_dart()
+
+
+def get_stats_widget(match_data):
+    scroll = QScrollArea()
+    scroll.setWidgetResizable(True)
+    w = QWidget()
+    layout = QVBoxLayout(w)
+    layout.addWidget(QLabel("<b>Auswertung: Mensch-ärgere-dich-nicht!</b>"))
+    layout.addWidget(QLabel(f"Gewinner: {match_data.get('gewinner', 'N/A')}"))
+    layout.addStretch()
+    scroll.setWidget(w)
+    return scroll

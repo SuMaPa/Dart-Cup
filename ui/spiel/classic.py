@@ -1,25 +1,15 @@
-def init_elimination(game):
-    game.start_score = (
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
+
+
+def init_classic(game):
+    start_score = (
         int(game.variant_box.currentText()) if hasattr(game, "variant_box") else 301
     )
-    game.scores = [game.start_score] * len(game.players)
+    game.scores = [start_score] * len(game.players)
     game.has_entered = [not game.cb_double_in.isChecked()] * len(game.players)
 
 
-def check_elimination(game, current_idx, score):
-    if score == 0:
-        return
-    for i in range(len(game.players)):
-        if (
-            i != current_idx
-            and i not in game.finished_players
-            and game.scores[i] == score
-        ):
-            game.scores[i] = game.start_score
-            game.is_bust[i] = True
-
-
-def process_elimination(game, daten):
+def process_classic(game, daten):
     val = daten["val"]
     points = daten["points"]
     was_double = daten["was_double"]
@@ -51,5 +41,22 @@ def process_elimination(game, daten):
         return
 
     game.scores[p] = new_score
-    check_elimination(game, p, new_score)
     game.finish_dart()
+
+
+def get_stats_widget(match_data):
+    scroll = QScrollArea()
+    scroll.setWidgetResizable(True)
+    w = QWidget()
+    layout = QVBoxLayout(w)
+
+    layout.addWidget(QLabel("<b>Auswertung: Classic X01</b>"))
+    layout.addWidget(QLabel(f"Gewinner: {match_data.get('gewinner', 'N/A')}"))
+
+    # Beispiel für X01-spezifische Auswertung
+    wuerfe = len(match_data.get("verlauf", []))
+    layout.addWidget(QLabel(f"Gesamte Darts im Match: {wuerfe}"))
+
+    layout.addStretch()
+    scroll.setWidget(w)
+    return scroll

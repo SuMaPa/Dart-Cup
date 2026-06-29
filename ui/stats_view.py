@@ -1,9 +1,22 @@
 import os
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem,
-                             QLabel, QPushButton, QHeaderView, QTabWidget, QComboBox, QHBoxLayout)
+import importlib
+from PyQt6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QTableWidget,
+    QTableWidgetItem,
+    QLabel,
+    QPushButton,
+    QHeaderView,
+    QTabWidget,
+    QComboBox,
+    QHBoxLayout,
+    QDialog,
+)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 from ui.stats_viewer import DartStatsEngine
+
 
 class StatsWindow(QWidget):
     def __init__(self, parent_window=None):
@@ -15,7 +28,6 @@ class StatsWindow(QWidget):
         center_point = self.screen().availableGeometry().center()
         frame_geometry = self.frameGeometry()
         frame_geometry.moveCenter(center_point)
-        self.move(frame_geometry.topLeft())
         self.setStyleSheet("""
             QWidget {
                 background-color: #1b1e20;
@@ -42,7 +54,7 @@ class StatsWindow(QWidget):
                 font-weight: bold;
                 border: 1px solid #3daee9;
                 border-bottom-color: #232629;
-                outline: none; /* Verhindert die Fokus-Unterstreichung */
+                outline: none;
             }
             QTableWidget {
                 background-color: #232629;
@@ -79,7 +91,9 @@ class StatsWindow(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(15, 15, 15, 15)
         title = QLabel("PRO DART LEAGUE - STATISTIKEN")
-        title.setStyleSheet("font-size: 20px; font-weight: bold; color: #3daee9; letter-spacing: 1px; margin-bottom: 5px;")
+        title.setStyleSheet(
+            "font-size: 20px; font-weight: bold; color: #3daee9; letter-spacing: 1px; margin-bottom: 5px;"
+        )
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(title)
         self.tabs = QTabWidget()
@@ -99,21 +113,98 @@ class StatsWindow(QWidget):
     def init_history_tab(self):
         widget = QWidget()
         layout = QVBoxLayout()
+        hint = QLabel(
+            "<i>Tipp: Doppelklick auf ein Match, um die modusspezifische Detail-Auswertung zu öffnen.</i>"
+        )
+        hint.setStyleSheet("color: #fdbc4b;")
+        layout.addWidget(hint)
+
         self.history_table = QTableWidget()
         self.history_table.setColumnCount(4)
-        self.history_table.setHorizontalHeaderLabels(["Datum", "Modus", "Gewinner", "Teilnehmer"])
+        self.history_table.setHorizontalHeaderLabels(
+            ["Datum", "Modus", "Gewinner", "Teilnehmer"]
+        )
         self.history_table.verticalHeader().setVisible(False)
-        self.history_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.history_table.setSelectionBehavior(
+            QTableWidget.SelectionBehavior.SelectRows
+        )
         self.history_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         header = self.history_table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+
+        self.history_table.itemDoubleClicked.connect(self.show_match_details)
+
         layout.addWidget(self.history_table)
         widget.setLayout(layout)
         self.tabs.addTab(widget, "Match-Historie")
         self.load_history_data()
+
+    def load_history_data(self):
+        self.matches_data = self.engine.load_all_matches()
+        self.history_table.setRowCount(len(self.matches_data))
+
+        for row, data in enumerate(self.matches_data):
+            item_datum = QTableWidgetItem(data.get("datum", "Unbekannt"))
+            item_modus = QTableWidgetItem(data.get("modus", "Unbekannt"))
+            item_gewinner = QTableWidgetItem(data.get("gewinner", "Unbekannt"))
+            item_gewinner.setForeground(QColor("#fdbc4b"))
+            teilnehmer_liste = ", ".join(data.get("teilnehmer", []))
+            item_teilnehmer = QTableWidgetItem(teilnehmer_liste)
+            item_datum.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            item_modus.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.history_table.setItem(row, 0, item_datum)
+            self.history_table.setItem(row, 1, item_modus)
+            self.history_table.setItem(row, 2, item_gewinner)
+            self.history_table.setItem(row, 3, item_teilnehmer)
+
+    def show_match_details(self, item):
+        row = item.row()
+        match_data = self.matches_data[row]
+        modus_name = match_data.get("modus", "")
+
+        # Mappt den Anzeigenamen auf deinen Dateinamen in /ui/spiel/
+        file_map = {
+            "Bob's 27": "bob",
+            "Classic": "classic",
+            "Elimination": "elimination",
+            "Mensch": "mensch",
+            "Cricket": "cricket",
+            "Around": "clock",
+            "Shanghai": "shanghai",
+            "Halve": "halve_it",
+            "Killer": "killer",
+        }
+
+        modul_datei = "classic"
+        for key, val in file_map.items():
+            if key in modus_name:
+                modul_datei = val
+                break
+
+        try:
+            # Dynamischer Ladevorgang aus deinem neuen /ui/spiel/ Ordner
+            spiel_modul = importlib.import_module(f"ui.spiel.{modul_datei}")
+            if hasattr(spiel_modul, "get_stats_widget"):
+                detail_widget = spiel_modul.get_stats_widget(match_data)
+
+                dialog = QDialog(self)
+                dialog.setWindowTitle(f"Match Details: {modus_name}")
+                dialog.resize(500, 400)
+                dialog.setStyleSheet(self.styleSheet())
+
+                layout = QVBoxLayout(dialog)
+                layout.addWidget(detail_widget)
+
+                close_btn = QPushButton("Schließen")
+                close_btn.clicked.connect(dialog.accept)
+                layout.addWidget(close_btn)
+
+                dialog.exec()
+        except Exception as e:
+            print(f"Fehler beim Laden des Moduls ui.spiel.{modul_datei}: {e}")
 
     def init_player_tab(self):
         widget = QWidget()
@@ -129,34 +220,22 @@ class StatsWindow(QWidget):
         self.stats_table.setColumnCount(2)
         self.stats_table.setHorizontalHeaderLabels(["Metrik", "Wert"])
         self.stats_table.verticalHeader().setVisible(False)
-        self.stats_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        self.stats_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.stats_table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+        self.stats_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
         layout.addWidget(self.stats_table)
         self.heatmap_label = QLabel("Lieblings-Segmente (Heatmap): -")
-        self.heatmap_label.setStyleSheet("color: #fdbc4b; font-weight: bold; padding: 5px;")
+        self.heatmap_label.setStyleSheet(
+            "color: #fdbc4b; font-weight: bold; padding: 5px;"
+        )
         layout.addWidget(self.heatmap_label)
         widget.setLayout(layout)
         self.tabs.addTab(widget, "Spieler-Profile")
         all_players = self.engine.get_all_tracked_players()
         self.player_box.addItems(all_players)
-
-    def load_history_data(self):
-        matches = self.engine.load_all_matches()
-        self.history_table.setRowCount(len(matches))
-
-        for row, data in enumerate(matches):
-            item_datum = QTableWidgetItem(data.get("datum", "Unbekannt"))
-            item_modus = QTableWidgetItem(data.get("modus", "Unbekannt"))
-            item_gewinner = QTableWidgetItem(data.get("gewinner", "Unbekannt"))
-            item_gewinner.setForeground(QColor("#fdbc4b"))
-            teilnehmer_liste = ", ".join(data.get("teilnehmer", []))
-            item_teilnehmer = QTableWidgetItem(teilnehmer_liste)
-            item_datum.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-            item_modus.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.history_table.setItem(row, 0, item_datum)
-            self.history_table.setItem(row, 1, item_modus)
-            self.history_table.setItem(row, 2, item_gewinner)
-            self.history_table.setItem(row, 3, item_teilnehmer)
 
     def update_player_stats(self, player_name):
         if not player_name:
@@ -167,8 +246,14 @@ class StatsWindow(QWidget):
             ("Gewonnene Spiele", str(stats["wins"])),
             ("Siegquote", f"{stats['win_rate']:.1f} %"),
             ("Geworfene Darts (Gesamt)", str(stats["total_darts"])),
-            ("3-Dart-Average (Classic X01)", f"{stats['x01_avg']:.2f}" if stats["x01_avg"] > 0 else "N/A"),
-            ("Meiste Aufnahmen (Highscore)", f"180er: {stats['180s']} | 140+: {stats['140s']} | 100+: {stats['100s']}")
+            (
+                "3-Dart-Average (Classic X01)",
+                f"{stats['x01_avg']:.2f}" if stats["x01_avg"] > 0 else "N/A",
+            ),
+            (
+                "Meiste Aufnahmen (Highscore)",
+                f"180er: {stats['180s']} | 140+: {stats['140s']} | 100+: {stats['100s']}",
+            ),
         ]
         self.stats_table.setRowCount(len(metriken))
         for row, (metric, val) in enumerate(metriken):
@@ -176,7 +261,9 @@ class StatsWindow(QWidget):
             self.stats_table.setItem(row, 1, QTableWidgetItem(val))
         top_fields = stats["top_segments"]
         if top_fields:
-            text = "Lieblings-Segmente (Heatmap):   " + "   |   ".join([f"{k} ({v}x)" for k, v in top_fields])
+            text = "Lieblings-Segmente (Heatmap):   " + "   |   ".join(
+                [f"{k} ({v}x)" for k, v in top_fields]
+            )
         else:
             text = "Lieblings-Segmente (Heatmap): Noch keine Würfe dokumentiert."
         self.heatmap_label.setText(text)

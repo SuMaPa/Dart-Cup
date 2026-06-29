@@ -1,8 +1,13 @@
 def init_around_the_clock(game):
     game.scores = [1] * len(game.players)
     # Variante aus UI auslesen
-    variante = game.variant_box.currentText() if hasattr(game, 'variant_box') else "Standard"
-    game.clock_variante = variante if variante in ["Standard", "Double-Only", "All-In"] else "Standard"
+    variante = (
+        game.variant_box.currentText() if hasattr(game, "variant_box") else "Standard"
+    )
+    game.clock_variante = (
+        variante if variante in ["Standard", "Double-Only", "All-In"] else "Standard"
+    )
+
 
 def process_around_the_clock(game, daten):
     val = daten["val"]
@@ -28,9 +33,12 @@ def process_around_the_clock(game, daten):
         if val == target:
             is_hit = True
             # Logik: Single=1, Double=2, Triple=3
-            if daten["was_triple"]: schritte = 3
-            elif daten["was_double"]: schritte = 2
-            else: schritte = 1
+            if daten["was_triple"]:
+                schritte = 3
+            elif daten["was_double"]:
+                schritte = 2
+            else:
+                schritte = 1
 
     if is_hit:
         neuer_score = target + schritte

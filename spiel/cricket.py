@@ -1,14 +1,19 @@
 def init_cricket(game):
     game.scores = [0] * len(game.players)
-    game.cricket_stat = {player_idx: {num: 0 for num in [15, 16, 17, 18, 19, 20, 25]}
-                         for player_idx in range(len(game.players))}
+    game.cricket_stat = {
+        player_idx: {num: 0 for num in [15, 16, 17, 18, 19, 20, 25]}
+        for player_idx in range(len(game.players))
+    }
     game.has_entered = [True] * len(game.players)
 
     # Variante aus der UI auslesen
-    variante = game.variant_box.currentText() if hasattr(game, 'variant_box') else "Standard"
+    variante = (
+        game.variant_box.currentText() if hasattr(game, "variant_box") else "Standard"
+    )
     if variante not in ["Standard", "Cut-Throat", "No-Score"]:
         variante = "Standard"
     game.cricket_variante = variante
+
 
 def process_cricket(game, daten):
     val = daten["val"]
@@ -27,8 +32,11 @@ def process_cricket(game, daten):
             # 2. Wenn das Feld bereits geschlossen ist, prüfen wir die Punktevergabe
             else:
                 # Prüfen, ob es noch Gegner gibt, die das Feld offen haben
-                gegner_haben_offen = any(game.cricket_stat[g_idx][val] < 3
-                                         for g_idx in range(len(game.players)) if g_idx != p)
+                gegner_haben_offen = any(
+                    game.cricket_stat[g_idx][val] < 3
+                    for g_idx in range(len(game.players))
+                    if g_idx != p
+                )
 
                 if gegner_haben_offen:
                     punkte_wert = 25 if val == 25 else val
