@@ -91,13 +91,7 @@ SPIEL_MODI = {
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-<<<<<<< HEAD
-    ex = ProDartLeague()
-    ex.setWindowTitle("Dart Cup v.01.06.26")
-    ex.show()
-=======
     window = ProDartLeague()
     window.setWindowTitle("Dart Cup v.15.06.26")
     window.show()
->>>>>>> 53ab7cd (Lokale Änderungen sichern)
     sys.exit(app.exec())
